@@ -1,6 +1,14 @@
 ## Al助手 Cursor 辅助 Vue3.5+Electron+大模型 跨平台实战
 
 > 最新前端技术栈：Vue3.5 、 Electron、TS、 Vite、Pinia、Radix Vue、IndexedDB、 Dexie.js ，与多种知名AI大模型（文心一言/通义千问/Claude／Deepseek），手把手带你开发一个跨平台的 AI 桌面聊天应用，同时教你用 Cursor 辅助开发倍速提升开发效率。
+## 项目代码提交规范
+    feat：    新功能
+    fix：     修复问题
+    docs：    文档变更
+    style：   代码样式调整（不影响功能）
+    refactor：代码重构
+    test：    测试相关
+    chore：   构建工具或辅助脚本变更
 
 ### 1、初始化
 ```bash
