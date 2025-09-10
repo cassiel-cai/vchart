@@ -10,4 +10,11 @@ npx create-electron-app@latest my-new-app --template=vite-typescript
 # 2. 添加 Vue 依赖项
 npm install vue
 npm install --save-dev @vitejs/plugin-vue
+
+# 3. 添加 tailwindcss 样式依赖，安装后：在 src/index.css 文件中引入 
+#  @tailwind base;
+#  @tailwind components;
+#  @tailwind utilities;
+npm install -D tailwindcss@3.4.17 postcss@8.4.35 autoprefixer@10.4.17
+npx tailwindcss init -p
 ```
