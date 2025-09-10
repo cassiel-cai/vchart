@@ -12,8 +12,8 @@ if (started) {
 const createWindow = () => {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
-    width: 800, // 窗口宽度
-    height: 600, // 窗口高度
+    width: 1024, // 窗口宽度
+    height: 768, // 窗口高度
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), // 预加载脚本
     },
