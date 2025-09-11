@@ -22,10 +22,11 @@ npx create-electron-app@latest my-new-app --template=vite-typescript
 npm install vue
 npm install --save-dev @vitejs/plugin-vue
 
-# 3. 添加 tailwindcss 样式依赖，安装后：在 src/index.css 文件中引入
-#  @tailwind base;
-#  @tailwind components;
-#  @tailwind utilities;
+# 3. 添加 tailwindcss 样式依赖
+# 在 src/index.css 文件中引入
+#   @tailwind base;
+#   @tailwind components;
+#   @tailwind utilities;
 npm install -D tailwindcss@3.4.17 postcss@8.4.35 autoprefixer@10.4.17
 npx tailwindcss init -p
 
@@ -49,4 +50,31 @@ npm add radix-vue
 #   优点：不会影响 URL，适用于不需要改变地址栏 URL 的场景。
 #   缺点：不能直接在地址栏中访问路由。
 npm install vue-router@4
+
+# 7. 使用文心一言调用 SDK 模型库：https://console.bce.baidu.com/qianfan/overview
+# 7-1. 安装 Node.js SDK
+npm install @baiducloud/qianfan
+# 7-2. 完成鉴权：https://console.bce.baidu.com/iam/#/iam/accesslist 查看ACCESS_KEY和SECRET_KEY
+# 7-3. 初始化
+#   (1)通过配置文件，在.env文件中，设置一下内容：
+#     QIANFAN_ACCESS_KEY=your_access_key
+#     QIANFAN_SECRET_KEY=your_secret_key
+#   (2)通过环境变量：
+#     import {setEnvVariable} from "@baiducloud/qianfan";
+#     setEnvVariable ( 'QIANFAN_ACCESS_KEY', 'your_access_key');
+#     setEnvVariable( 'QIANFAN_SECRET_KEY', 'your_secret_key');
+#   (3)通过参数：
+#     import {ChatCompletion} from "@baiducloud/qianfan";
+#     const client = new ChatCompletion ({ QIANFAN_ACCESS_KFY: '',QIANFAN_SECRET_KEY: ''})
+# 7-4. 使用SDK
+#   import { ChatCompletion } from '@baiducloud/qianfan'
+#   const client = new ChatCompletion()
+#   const resp = await client.chat({
+#     messages: [
+#       {
+#         role: 'user',
+#         content: '你好，我是小度'
+#       }
+#     ]
+#   }, 'ERNIE-Speed-128K')
 ```
