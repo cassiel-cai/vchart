@@ -56,57 +56,76 @@ npm install vue-router@4
 npm install @baiducloud/qianfan
 # 7-2. 完成鉴权：https://console.bce.baidu.com/iam/#/iam/accesslist 查看ACCESS_KEY和SECRET_KEY
 # 7-3. 初始化
-#   (1)通过配置文件，在.env文件中，设置一下内容：
-#     QIANFAN_ACCESS_KEY=your_access_key
-#     QIANFAN_SECRET_KEY=your_secret_key
-#   (2)通过环境变量：
-#     import {setEnvVariable} from "@baiducloud/qianfan";
-#     setEnvVariable ( 'QIANFAN_ACCESS_KEY', 'your_access_key');
-#     setEnvVariable( 'QIANFAN_SECRET_KEY', 'your_secret_key');
-#   (3)通过参数：
-#     import {ChatCompletion} from "@baiducloud/qianfan";
-#     const client = new ChatCompletion ({ QIANFAN_ACCESS_KFY: '',QIANFAN_SECRET_KEY: ''})
+# (1)通过配置文件，在.env文件中，设置一下内容：
+#   QIANFAN_ACCESS_KEY=your_access_key
+#   QIANFAN_SECRET_KEY=your_secret_key
+# (2)通过环境变量：
+#   import {setEnvVariable} from "@baiducloud/qianfan";
+#   setEnvVariable ( 'QIANFAN_ACCESS_KEY', 'your_access_key');
+#   setEnvVariable( 'QIANFAN_SECRET_KEY', 'your_secret_key');
+# (3)通过参数：
+#   import {ChatCompletion} from "@baiducloud/qianfan";
+#   const client = new ChatCompletion ({ QIANFAN_ACCESS_KFY: '',QIANFAN_SECRET_KEY: ''})
 # 7-4. 使用SDK
-#   import { ChatCompletion } from '@baiducloud/qianfan'
-#   const client = new ChatCompletion()
-#   const resp = await client.chat({
-#     messages: [
-#       {
-#         role: 'user',
-#         content: '你好，我是小度'
-#       }
-#     ]
-#   }, 'ERNIE-Speed-128K')
+# import { ChatCompletion } from '@baiducloud/qianfan'
+# const client = new ChatCompletion()
+# const resp = await client.chat({
+#   messages: [
+#     {
+#       role: 'user',
+#       content: '你好，我是小度'
+#     }
+#   ]
+# }, 'ERNIE-Speed-128K')
 
 # 8. 实现流式输出 -> stream: true
-#   const stream = await client.chat({
-#     messages: [
-#       {
-#         role: 'user',
-#         content: '什么是光合作用？',
-#       },
-#     ],
-#     stream: true,
-#    }, 'ERNIE-Speed-128K')
-#   https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Asynclterator
-#   for await (const chunk of stream as AsyncIterable<any>) {
-#     console.log(chunk, 'chunk===>')
-#   }
+# const stream = await client.chat({
+#   messages: [
+#     {
+#       role: 'user',
+#       content: '什么是光合作用？',
+#     },
+#   ],
+#   stream: true,
+#  }, 'ERNIE-Speed-128K')
+# https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Asynclterator
+# for await (const chunk of stream as AsyncIterable<any>) {
+#   console.log(chunk, 'chunk===>')
+# }
 
 # 9. 三种不同的 Role
-#   System 用于提供设置信息或上下文，以指导模型的行为。这可能包括对话应该如何进行的说明或指导方针。
-#   User 该角色代表对话中的人类用户。用户的输入引导对话并促使助手做出回应。
-#   Assistant 这是模型本身的角色，根据系统设定的上下文回应用户的输入。
+# System 用于提供设置信息或上下文，以指导模型的行为。这可能包括对话应该如何进行的说明或指导方针。
+# User 该角色代表对话中的人类用户。用户的输入引导对话并促使助手做出回应。
+# Assistant 这是模型本身的角色，根据系统设定的上下文回应用户的输入。
 
 # 10. 多轮对话采取（奇数）方式
-#   messages: [{
-#     role: 'user',
-#     content: '你好',
-#   },{
-#     role: 'assistant',
-#     content: '如果您有任何问题，请随时向我提问。',
-#   },{
-#     role: 'user',
-#     content: '我在上海，周末可以去哪里玩？',
-#   }],
+# messages: [{
+#   role: 'user',
+#   content: '你好',
+# },{
+#   role: 'assistant',
+#   content: '如果您有任何问题，请随时向我提问。',
+# },{
+#   role: 'user',
+#   content: '我在上海，周末可以去哪里玩？',
+# }],
+
+# 11. 使用阿里通义千问：https://bailian.console.aliyun.com
+# 11-1. 安装 OpenAI Node.js SDK
+npm install openai
+# 11-2. API Key: https://bailian.console.aliyun.com/?tab=globalset#/efm/api_key
+# 11-3. 初始化 OpenAI 类
+npm install dotenv --save
+# import 'dotenv/config'
+# import OpenAI from 'openai'
+# const client = new OpenAI({
+#   apiKey: process.env['ALI_API_KEY'],
+#   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+# })
+# const resp = await client.chat.completions.create({
+#   messages: [{ role: 'user', content: '你好' }],
+#   model: 'qwen-turbo',
+# })
+# 11-4. 流式输出同 -> 8
+# 11-5. 多轮对话同 -> 10 不过使用 openai 它的 role 可以使用 System 用于提供设置信息或上下文，以指导模型的行为。
 ```
