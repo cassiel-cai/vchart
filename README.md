@@ -148,4 +148,24 @@ npm install dotenv --save
 #   }],
 #   model: 'qwen-vl-plus',
 # })
+
+# 13. 使用 qwen-long 完后文件上传及文本处理
+# import fs from 'fs'
+# const fileObj = await client.files.create({
+#   file: fs.createReadStream('/Users/orgin/Downloads/xxx/xxx.xlsx'),
+#   purpose: 'file-extract' as any,
+# })
+# const resp = await client.chat.completions.create({
+#   messages: [{
+#     role: 'system',
+#     content: '你是一个乐于助人的助手。',
+#   },{
+#     role: 'system',
+#     content: `fileid://${fileObj.id}`,
+#   },{
+#     role: 'user',
+#     content: '请总结出文件中的内容',
+#   }],
+#   model: 'qwen-long',
+# })
 ```
