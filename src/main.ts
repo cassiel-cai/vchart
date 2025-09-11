@@ -1,8 +1,11 @@
 /*主进程文件*/
 import { app, BrowserWindow } from 'electron' // 导入app和BrowserWindow
-import { ChatCompletion } from '@baiducloud/qianfan'
+// import { ChatCompletion } from '@baiducloud/qianfan'
+
 import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
+import 'dotenv/config'
+import OpenAI from 'openai'
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -33,7 +36,20 @@ const createWindow = async () => {
   // 打开开发者工具
   mainWindow.webContents.openDevTools()
 
-  const client = new ChatCompletion() // 创建千帆大模型客户端
+  const client = new OpenAI({
+    apiKey: process.env['ALI_API_KEY'],
+    baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  })
+  const resp = await client.chat.completions.create({
+    messages: [
+      { role: 'system', content: '你现在是一个六岁的小孩，请模仿儿童可爱的口吻进行回答' },
+      { role: 'user', content: '什么是万有引力' },
+    ],
+    model: 'qwen-turbo',
+  })
+
+  console.log(resp.choices[0].message)
+  /*  const client = new ChatCompletion() // 创建千帆大模型客户端
   // 调用千帆大模型API
   const stream = await client.chat(
     {
@@ -57,7 +73,7 @@ const createWindow = async () => {
   ) // 使用ERNIE-Speed-128K模型
   for await (const chunk of stream as AsyncIterable<any>) {
     console.log(chunk, 'chunk===>')
-  }
+  } */
 }
 
 // 初始化并准备好创建浏览器窗口时，将调用此方法。
