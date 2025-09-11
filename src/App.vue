@@ -19,11 +19,11 @@
     </div>
     <div class="h-full flex-1 flex items-center">
       <div class="w-[80%] mx-auto h-full">
-        <div class="flex items-center h-[85%] ">
+        <div class="flex items-center h-[85%]">
           <ProviderSelect :providers="providers" v-model="selectedModel" />
         </div>
         <div class="flex items-center h-[15%]">
-          message
+          <MessageInput v-model="message" @create="onCreate" />
         </div>
       </div>
     </div>
@@ -36,6 +36,7 @@ import { Icon } from '@iconify/vue'
 import { ConversationProps, ProviderProps } from './types'
 import ConversationList from './components/ConversationList.vue'
 import ProviderSelect from './components/ProviderSelect.vue'
+import MessageInput from './components/Messagelnput.vue'
 
 const conversations: ConversationProps[] = [
   {
@@ -176,6 +177,11 @@ const providers: ProviderProps[] = [
 ]
 
 const selectedModel = ref<string>('')
+const message = ref<string>('')
+
+const onCreate = (value: string) => {
+  console.log(value, 'value')
+}
 </script>
 
 <style scoped></style>
