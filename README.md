@@ -128,4 +128,24 @@ npm install dotenv --save
 # })
 # 11-4. 流式输出同 -> 8
 # 11-5. 多轮对话同 -> 10 不过使用 openai 它的 role 可以使用 System 用于提供设置信息或上下文，以指导模型的行为。
+
+# 12. 使用 qwen-vl-plus 完成读图功能
+# import fs from 'fs/promises'
+# const imageBuffer = await fs.readFile('/Users/orgin/Pictures/xxx/xxx.png')
+# const base64Image = imageBuffer.toString('base64')
+# const resp = await client.chat.completions.create({
+#   messages: [{
+#     role: 'user',
+#     content: [{
+#       type: 'text',
+#       text: '它是一张什么风格的图片'
+#     },{
+#       type: 'image_url',
+#       image_url: {
+#         url: `data:image/png;base64,${base64Image}`, // 注意 data:image/imageBuffer中引入的图片格式
+#       },
+#     }]
+#   }],
+#   model: 'qwen-vl-plus',
+# })
 ```
