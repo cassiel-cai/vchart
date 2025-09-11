@@ -1,5 +1,6 @@
 /*主进程文件*/
 import { app, BrowserWindow } from 'electron' // 导入app和BrowserWindow
+import { ChatCompletion } from '@baiducloud/qianfan'
 import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 
@@ -9,7 +10,7 @@ if (started) {
 }
 
 // 创建浏览器窗口
-const createWindow = () => {
+const createWindow = async () => {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 1024, // 窗口宽度
@@ -31,6 +32,18 @@ const createWindow = () => {
 
   // 打开开发者工具
   mainWindow.webContents.openDevTools()
+
+  const client = new ChatCompletion()
+  const resp = await client.chat({
+    messages: [
+      {
+        role: 'user',
+        content: '你好，我是小度'
+      }
+    ]
+  }, 'ERNIE-Speed-128K')
+
+  console.log(resp, 'resp===>')
 }
 
 // 初始化并准备好创建浏览器窗口时，将调用此方法。
