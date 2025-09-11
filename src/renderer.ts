@@ -9,7 +9,7 @@ import './index.css' // 导入 index.css
 
 const routers = [
   { path: '/', component: Home },
-  { path: '/conversation', component: Conversation },
+  { path: '/conversation/:id', component: Conversation },
   { path: '/settings', component: Settings },
 ]
 

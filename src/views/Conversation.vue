@@ -1,6 +1,7 @@
 <template>
+  {{ route }}
   <div class="w-[80%] mx-auto h-[85%] overflow-y-auto pt-2">
-    <MessageList :messages="messages" />
+    <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
     <MessageInput />
@@ -8,9 +9,13 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { MessageProps } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
+
+const route = useRoute()
+const conversationId = parseInt(route.params.id as string)
 
 const messages: MessageProps[] = [
   {
@@ -62,7 +67,50 @@ const messages: MessageProps[] = [
     createdAt: '2021-01-01',
     updatedAt: '2021-01-01',
   },
+  {
+    id: 7,
+    content: '你是谁',
+    type: 'question',
+    conversationId: 2,
+    createdAt: '2021-01-01',
+    updatedAt: '2021-01-01',
+  },
+  {
+    id: 8,
+    content: '我是AI助手',
+    type: 'answer',
+    conversationId: 2,
+    createdAt: '2021-01-01',
+    updatedAt: '2021-01-01',
+  },
+  {
+    id: 9,
+    content: '你知道我是谁吗',
+    type: 'question',
+    conversationId: 3,
+    createdAt: '2021-01-01',
+    updatedAt: '2021-01-01',
+  },
+  {
+    id: 10,
+    content: '我不知道你是谁',
+    type: 'answer',
+    conversationId: 3,
+    createdAt: '2021-01-01',
+    updatedAt: '2021-01-01',
+  },
+  {
+    id: 11,
+    content: '',
+    type: 'answer',
+    status: 'loading',
+    conversationId: 3,
+    createdAt: '2021-01-01',
+    updatedAt: '2021-01-01',
+  },
 ]
+
+const filteredMessages = messages.filter(message => message.conversationId === conversationId)
 </script>
 
 <style scoped></style>
