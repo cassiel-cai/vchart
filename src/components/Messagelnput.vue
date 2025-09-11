@@ -1,18 +1,12 @@
 <template>
   <div class="message-input w-full shadow-sm border rounded-lg flex items-center py-1 px-2 border-gray-300 focus-within:border-green-700">
     <input v-model="model" type="text" placeholder="Message..." class="outline-none border-0 flex-1 bg-white focus:ring-0" />
-    <button
-      class="shadow-sm inline-flex items-center justify-center bg-green-700 text-white hover:bg-green-700/90 border border-green-700 h-[32px] py-[8px] px-[15px] text-sm rounded-[4px]"
-      @click="onCreate"
-    >
-      <Icon icon="radix-icons:paper-plane" class="mr-2" />
-      发送
-    </button>
+    <VkButton color="green" iconName="radix-icons:paper-plane" @click="onCreate">发送</VkButton>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
+import VkButton from '../components/Button.vue'
 
 const emit = defineEmits<{
   create: [value: string]
