@@ -25,4 +25,10 @@ npm install --save-dev @vitejs/plugin-vue
 #  @tailwind utilities;
 npm install -D tailwindcss@3.4.17 postcss@8.4.35 autoprefixer@10.4.17
 npx tailwindcss init -p
+
+# 4. 使用 Iconify 作为图标
+npm install --save-dev @iconify/vue
+
+# 5. 使用 Radix Vue 作为组件库
+npm add radix-vue
 ```
