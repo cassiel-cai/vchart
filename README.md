@@ -2,7 +2,7 @@
 
 > 最新前端技术栈：Vue3.5 、 Electron、TS、 Vite、Pinia、Radix Vue、IndexedDB、 Dexie.js ，与多种知名AI大模型（文心一言/通义千问/Claude／Deepseek），手把手带你开发一个跨平台的 AI 桌面聊天应用，同时教你用 Cursor 辅助开发倍速提升开发效率。
 
-## 项目代码提交规范
+## 📝 项目代码提交规范
 
     feat：    新功能
     fix：     修复问题
@@ -12,7 +12,7 @@
     test：    测试相关
     chore：   构建工具或辅助脚本变更
 
-### 1、初始化
+### 🎯 项目操作指南
 
 ```bash
 # 1.使用 Electron Forge 安装初始化模版
@@ -77,4 +77,36 @@ npm install @baiducloud/qianfan
 #       }
 #     ]
 #   }, 'ERNIE-Speed-128K')
+
+# 8. 实现流式输出 -> stream: true
+#   const stream = await client.chat({
+#     messages: [
+#       {
+#         role: 'user',
+#         content: '什么是光合作用？',
+#       },
+#     ],
+#     stream: true,
+#    }, 'ERNIE-Speed-128K')
+#   https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Asynclterator
+#   for await (const chunk of stream as AsyncIterable<any>) {
+#     console.log(chunk, 'chunk===>')
+#   }
+
+# 9. 三种不同的 Role
+#   System 用于提供设置信息或上下文，以指导模型的行为。这可能包括对话应该如何进行的说明或指导方针。
+#   User 该角色代表对话中的人类用户。用户的输入引导对话并促使助手做出回应。
+#   Assistant 这是模型本身的角色，根据系统设定的上下文回应用户的输入。
+
+# 10. 多轮对话采取（奇数）方式
+#   messages: [{
+#     role: 'user',
+#     content: '你好',
+#   },{
+#     role: 'assistant',
+#     content: '如果您有任何问题，请随时向我提问。',
+#   },{
+#     role: 'user',
+#     content: '我在上海，周末可以去哪里玩？',
+#   }],
 ```
