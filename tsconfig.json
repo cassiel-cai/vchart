@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "commonjs",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "outDir": "dist",
-    "moduleResolution": "node",
-    "resolveJsonModule": true
+    "target": "ESNext", // 使用 ESNext 目标
+    "module": "commonjs", // 使用 commonjs 模块系统
+    "allowJs": true, // 允许 JS 文件
+    "skipLibCheck": true, // 跳过库检查
+    "esModuleInterop": true, // 允许 ES 模块互操作
+    "noImplicitAny": true, // 禁止隐式的 any 类型
+    "sourceMap": true, // 生成 sourceMap 文件
+    "strictNullChecks": true, // 严格检查 null 和 undefined
+    "baseUrl": ".", // 基础 URL
+    "outDir": "dist", // 输出目录
+    "moduleResolution": "node", // 使用 node 模块系统
+    "resolveJsonModule": true // 解析 JSON 模块
   }
 }

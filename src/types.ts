@@ -18,11 +18,6 @@ export interface ProviderProps {
   models: string[]
 }
 
-export enum MessageType {
-  QUESTION = 'question',
-  ANSWER = 'answer',
-}
-
 export type MessageStatus = 'loading' | 'streaming' | 'finished'
 
 export interface MessageProps {

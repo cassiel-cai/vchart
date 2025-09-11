@@ -1,7 +1,7 @@
 <template>
   <div class="conversation-list">
     <div v-for="item in conversations" :key="item.id" class="item border-gray-300 border-t cursor-pointer bg-white hover:bg-gray-200 p-2">
-      <a @click.prevent ="goToConversation(item.id)">
+      <a @click.prevent="goToConversation(item.id)">
         <div class="flex justify-between items-center text-sm leading-5 text-gray-500">
           <span>{{ item.selectedModel }}</span>
           <span>{{ item.updatedAt }}</span>
