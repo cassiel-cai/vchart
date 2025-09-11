@@ -33,17 +33,31 @@ const createWindow = async () => {
   // 打开开发者工具
   mainWindow.webContents.openDevTools()
 
-  const client = new ChatCompletion()
-  const resp = await client.chat({
-    messages: [
-      {
-        role: 'user',
-        content: '你好，我是小度'
-      }
-    ]
-  }, 'ERNIE-Speed-128K')
-
-  console.log(resp, 'resp===>')
+  const client = new ChatCompletion() // 创建千帆大模型客户端
+  // 调用千帆大模型API
+  const stream = await client.chat(
+    {
+      messages: [
+        {
+          role: 'user',
+          content: '你好',
+        },
+        {
+          role: 'assistant',
+          content: '如果您有任何问题，请随时向我提问。',
+        },
+        {
+          role: 'user',
+          content: '我在上海，周末可以去哪里玩？',
+        },
+      ], // 消息
+      stream: true, // 流式输出
+    },
+    'ERNIE-Speed-128K'
+  ) // 使用ERNIE-Speed-128K模型
+  for await (const chunk of stream as AsyncIterable<any>) {
+    console.log(chunk, 'chunk===>')
+  }
 }
 
 // 初始化并准备好创建浏览器窗口时，将调用此方法。
