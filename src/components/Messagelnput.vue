@@ -20,8 +20,8 @@ const emit = defineEmits<{
 const model = defineModel<string>()
 
 const onCreate = () => {
-  if (model.value.trim() !== '') {
-    emit('create', model.value)
+  if (model?.value?.trim() !== '') {
+    emit('create', model.value!)
     model.value = ''
   } else {
     alert('请输入消息内容!')
