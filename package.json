@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.2.3",
+    "dexie": "^4.2.0",
     "dotenv": "^17.2.2",
     "electron-squirrel-startup": "^1.0.1",
     "openai": "^5.20.1",

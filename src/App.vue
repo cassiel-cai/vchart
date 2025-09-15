@@ -20,12 +20,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { conversations } from './testData'
+import { onMounted } from 'vue'
+import { conversations, providers } from './testData'
+import { db } from './db'
 import ConversationList from './components/ConversationList.vue'
 import VkButton from './components/Button.vue'
 
-let loading = ref(false)
+onMounted(async () => {
+  // const insertedId = await db.providers.add(providers[0])
+  // console.log(insertedId, 'insertedId')
+  const items = await db.providers.toArray()
+  console.log(items, 'items')
+
+  const updataItem = await db.providers.update(1,{ name: '文心一言2' })
+  console.log(updataItem, 'updataItem')
+})
 </script>
 
 <style scoped></style>
