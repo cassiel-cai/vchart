@@ -15,7 +15,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { db } from '../db'
-import { MessageProps, ConversationProps, UpdatgedStreamData } from '../types'
+import { MessageProps, ConversationProps, UpdatgedStreamData, MessageStatus } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
 import dayjs from 'dayjs'
@@ -78,8 +78,28 @@ onMounted(async () => {
     await creatingInitialMessage()
   }
 
-  window.electronAPI.onUpdateMessage((streamData: UpdatgedStreamData) => {
+  window.electronAPI.onUpdateMessage(async (streamData: UpdatgedStreamData) => {
     console.log('streamData', streamData)
+    const { messageId, data } = streamData
+    const currentMessage = await db.messages.where({ id: messageId }).first()
+    if (currentMessage) {
+      const updatedDate = {
+        content: currentMessage.content + data.result,
+        status: data.in_end ? ('finished' as MessageStatus) : ('streaming' as MessageStatus),
+        updatedAt: new Date().toISOString(),
+      }
+
+      await db.messages.update(messageId, updatedDate)
+
+      const index = filteredMessages.value.findIndex(item => item.id === messageId)
+
+      if (index !== -1) {
+        filteredMessages.value[index] = {
+          ...filteredMessages.value[index],
+          ...updatedDate,
+        }
+      }
+    }
   })
 })
 </script>
