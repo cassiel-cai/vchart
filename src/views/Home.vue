@@ -51,7 +51,7 @@ const createConversation = async (question: string) => {
     updatedAt: currentDate,
   }) // 添加 message
 
-  return router.push(`/conversation/${conversationId}?init=${newMessageId}`)
+  router.push(`/conversation/${conversationId}?init=${newMessageId}`)
 }
 </script>
 
