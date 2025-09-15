@@ -36,3 +36,13 @@ export interface CreateChatProps {
   selectedModel: string
   messageId: number
 }
+
+export interface UpdatgedStreamData {
+  messageId: number
+  data: {
+    in_end: boolean
+    result: string
+  }
+}
+
+export type onUpdatedCallback = (data: UpdatgedStreamData) => void

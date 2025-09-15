@@ -11,8 +11,8 @@
           <SelectViewport class="p-2">
             <div v-for="(item, index) in providers" :key="index">
               <SelectLabel class="flex items-center px-6 h-7 text-gray-500">
-                <img :src="item.avatar" :alt="item.name" class="w-5 h-5 mr-2 rounded" />
-                {{ item.name }}
+                <img :src="item.avatar" :alt="item.title" class="w-5 h-5 mr-2 rounded" />
+                {{ item.title }}
               </SelectLabel>
               <SelectGroup>
                 <SelectItem

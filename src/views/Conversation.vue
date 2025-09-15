@@ -15,7 +15,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { db } from '../db'
-import { MessageProps, ConversationProps } from '../types'
+import { MessageProps, ConversationProps, UpdatgedStreamData } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
 import dayjs from 'dayjs'
@@ -72,12 +72,15 @@ onMounted(async () => {
 
   if (initMessageId) {
     const lastMessage = await db.messages.where({ conversationId }).last()
-    console.log('lastMessage', lastMessage)
 
     lastQuestion = lastMessage?.content || ''
 
     await creatingInitialMessage()
   }
+
+  window.electronAPI.onUpdateMessage((streamData: UpdatgedStreamData) => {
+    console.log('streamData', streamData)
+  })
 })
 </script>
 

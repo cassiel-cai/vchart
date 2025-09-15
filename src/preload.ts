@@ -3,8 +3,9 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { ipcRenderer, contextBridge } from 'electron' // 导入 ipcRenderer 和 contextBridge
-import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
+import { CreateChatProps, onUpdatedCallback } from './types' // 导入 CreateChatProps 类型、onUpdatedCallback 类型
 
 contextBridge.exposeInMainWorld('electronAPI', {
   startChat: (data: CreateChatProps) => ipcRenderer.send('start-chat', data), // 暴露 startChat 方法到渲染进程
+  onUpdateMessage: (callback: onUpdatedCallback) => ipcRenderer.on('update-message', (_event, data) => callback(data)), // 暴露 onUpdateMessage 方法到渲染进程
 })

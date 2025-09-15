@@ -4,6 +4,7 @@ import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
+import { ChatCompletion } from '@baiducloud/qianfan'
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -21,8 +22,30 @@ const createWindow = async () => {
     },
   })
 
-  ipcMain.on('start-chat', async (event, content: CreateChatProps) => {
-    console.log('hey', content)
+  ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
+    const { providerName, selectedModel, content, messageId } = data
+    if (providerName === 'qianfan') {
+      const client = new ChatCompletion()
+      const stream = await client.chat(
+        {
+          messages: [{ role: 'user', content }],
+          stream: true,
+        },
+        selectedModel
+      )
+
+      for await (const chunk of stream as AsyncIterable<any>) {
+        const { in_end, result } = chunk
+        const content = {
+          messageId,
+          data: {
+            in_end,
+            result,
+          },
+        }
+        mainWindow.webContents.send('update-message', content)
+      }
+    }
   })
 
   // 加载应用的index.html
