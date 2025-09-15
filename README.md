@@ -168,4 +168,26 @@ npm install dotenv --save
 #   }],
 #   model: 'qwen-long',
 # })
+
+# 14. 选择 IndexedDB 作为存储方案
+# 性能：适合存储大量结构化数据，具有良好的性能表现。
+# 标准化：作为浏览器标准，与 Electron 集成较为简单。
+# 功能：支持索引、事务等功能，可满足复杂需求。
+# 异步操作：适合 Electron 中的异步编程模型。
+# 14-1. 使用 Dexie.js 封装 IndexedDB https://dexie.org/docs/Tutorial/Vue
+npm install dexie
+# 简化 IndexedDB 的 API
+# 提供更好的异步支持
+# 简化数据模型
+# 性能优化
+# 14-2. Dexie.js 基本用法
+# （1）创建 src/db.ts 文件
+# （2）引入 import { db } from './db'
+# (3) await db.providers.add()添加；
+#     await db.providers.toArray()查询;
+#     await db.providers.update()修改；
+#     await db.providers.delete()删除；
+
+# 15. 解决 Date 的格式问题 https://day.js.org/docs/en/installation/installation
+npm install dayjs --save
 ```
