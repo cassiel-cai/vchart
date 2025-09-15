@@ -20,20 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { conversations, providers } from './testData'
-import { db } from './db'
+import { ref, onMounted } from 'vue'
+import { ConversationProps } from './types'
+import { db, initProviders } from './db'
 import ConversationList from './components/ConversationList.vue'
 import VkButton from './components/Button.vue'
 
-onMounted(async () => {
-  // const insertedId = await db.providers.add(providers[0])
-  // console.log(insertedId, 'insertedId')
-  const items = await db.providers.toArray()
-  console.log(items, 'items')
+const conversations = ref<ConversationProps[]>([])
 
-  const updataItem = await db.providers.update(1,{ name: '文心一言2' })
-  console.log(updataItem, 'updataItem')
+onMounted(async () => {
+  await initProviders()
+  conversations.value = await db.conversations.toArray()
 })
 </script>
 

@@ -1,25 +1,57 @@
 <template>
   <div class="w-[80%] mx-auto h-full">
     <div class="flex items-center h-[85%]">
-      <ProviderSelect :providers="providers" v-model="selectedModel" />
+      <ProviderSelect :providers="providers" v-model="currentProvider" />
     </div>
     <div class="flex items-center h-[15%]">
-      <MessageInput v-model="message" @create="onCreate" />
+      <MessageInput @create="createConversation" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { providers } from '../testData'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { ProviderProps } from '../types'
+import { db } from '../db'
 import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/Messagelnput.vue'
 
-const selectedModel = ref<string>('')
-const message = ref<string>('')
+let router = useRouter()
+let currentProvider = ref<string>('')
+let providers = ref<ProviderProps[]>([])
 
-const onCreate = (value: string) => {
-  console.log(value, 'value')
+onMounted(async () => {
+  providers.value = await db.providers.toArray()
+})
+
+const modelInfo = computed(() => {
+  const [providerId, selectedModel] = currentProvider.value.split('/')
+  return {
+    providerId: parseInt(providerId),
+    selectedModel,
+  }
+})
+
+const createConversation = async (question: string) => {
+  const { providerId, selectedModel } = modelInfo.value // 获取 providerId 和 selectedModel
+  const currentDate = new Date().toISOString() // 获取当前日期
+  const conversationId = await db.conversations.add({
+    providerId,
+    selectedModel,
+    title: question,
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  }) // 添加 conversation
+  const newMessageId = await db.messages.add({
+    conversationId,
+    type: 'question',
+    content: question,
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  }) // 添加 message
+
+  return router.push(`/conversation/${conversationId}?init=${newMessageId}`)
 }
 </script>
 
