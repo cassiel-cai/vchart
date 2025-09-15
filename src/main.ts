@@ -1,8 +1,9 @@
 /*主进程文件*/
-import { app, BrowserWindow } from 'electron' // 导入app和BrowserWindow
+import { app, BrowserWindow, ipcMain } from 'electron' // 导入app和BrowserWindow
 import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
-import 'dotenv/config'
+import 'dotenv/config' // 导入dotenv
+import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -18,6 +19,10 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), // 预加载脚本
     },
+  })
+
+  ipcMain.on('start-chat', async (event, content: CreateChatProps) => {
+    console.log('hey', content)
   })
 
   // 加载应用的index.html

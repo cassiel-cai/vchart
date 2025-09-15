@@ -15,7 +15,6 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { db } from '../db'
-import { messages, conversations } from '../testData'
 import { MessageProps, ConversationProps } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
@@ -26,6 +25,7 @@ let filteredMessages = ref<MessageProps[]>([])
 let conversation = ref<ConversationProps>()
 let conversationId = parseInt(route.params.id as string)
 let initMessageId = parseInt(route.query.init as string)
+let lastQuestion = ''
 
 const creatingInitialMessage = async () => {
   const currentDate: Omit<MessageProps, 'id'> = {
@@ -38,10 +38,23 @@ const creatingInitialMessage = async () => {
   }
 
   const newMessageId = await db.messages.add(currentDate)
+
   filteredMessages.value.push({
     id: newMessageId,
     ...currentDate,
   })
+
+  if (conversation.value) {
+    const provider = await db.providers.where({ id: conversation.value.providerId }).first()
+    if (provider) {
+      await window.electronAPI.startChat({
+        messageId: newMessageId,
+        providerName: provider.name,
+        selectedModel: conversation.value.selectedModel,
+        content: lastQuestion,
+      })
+    }
+  }
 }
 
 watch(
@@ -58,7 +71,12 @@ onMounted(async () => {
   filteredMessages.value = await db.messages.where({ conversationId }).toArray()
 
   if (initMessageId) {
-    creatingInitialMessage()
+    const lastMessage = await db.messages.where({ conversationId }).last()
+    console.log('lastMessage', lastMessage)
+
+    lastQuestion = lastMessage?.content || ''
+
+    await creatingInitialMessage()
   }
 })
 </script>
