@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between h-screen">
     <div class="w-[300px] bg-gray-200 h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
-        <ConversationList :conversations="conversations" />
+        <ConversationList :conversations="items" />
       </div>
       <div class="h-[10%] grid grid-cols-2 gap-2 p-2">
         <router-link to="/">
@@ -20,17 +20,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ConversationProps } from './types'
+import { computed, onMounted } from 'vue'
 import { db, initProviders } from './db'
+import { conversations } from './testData'
+import { useConversationStore } from './stores/conversation'
 import ConversationList from './components/ConversationList.vue'
 import VkButton from './components/Button.vue'
 
-const conversations = ref<ConversationProps[]>([])
+const conversationStore = useConversationStore()
+
+const items = computed(() => conversationStore.items)
 
 onMounted(async () => {
   await initProviders()
-  conversations.value = await db.conversations.toArray()
+  conversationStore.items = await db.conversations.toArray()
 })
 </script>
 

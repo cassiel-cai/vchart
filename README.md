@@ -190,4 +190,7 @@ npm install dexie
 
 # 15. 解决 Date 的格式问题 https://day.js.org/docs/en/installation/installation
 npm install dayjs --save
+
+# 16. 选择 Pinia 作为状态存储 https://pinia.vuejs.org/zh/getting-started.html
+npm install pinia
 ```
