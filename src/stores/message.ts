@@ -55,5 +55,8 @@ export const useMessageStore = defineStore('message', {
     getLastQuestion: state => (conversationId: number) => {
       return state.items.findLast(item => item.conversationId === conversationId && item.type === 'question')
     },
+    isMessageLoading: state => {
+      return state.items.some(item => item.status === 'loading' || item.status === 'streaming')
+    },
   },
 })

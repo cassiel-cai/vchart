@@ -7,7 +7,7 @@
     <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
-    <MessageInput v-model="inputValue" @create="sendNewMessage" />
+    <MessageInput v-model="inputValue" :disabled="messageStore.isMessageLoading" @create="sendNewMessage" />
   </div>
 </template>
 

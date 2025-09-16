@@ -4,7 +4,7 @@
       <ProviderSelect :providers="providers" v-model="currentProvider" />
     </div>
     <div class="flex items-center h-[15%]">
-      <MessageInput @create="createConversation" />
+      <MessageInput :disabled="currentProvider === ''" @create="createConversation" />
     </div>
   </div>
 </template>
@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useProviderStore } from '../stores/provider'
 import { db } from '../db'
 import { ProviderProps } from '../types'
 import { useConversationStore } from '../stores/conversation'
@@ -19,12 +20,13 @@ import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/Messagelnput.vue'
 
 let router = useRouter()
+let providerStore = useProviderStore()
+let conversationStore = useConversationStore()
 let currentProvider = ref<string>('')
 let providers = ref<ProviderProps[]>([])
-let conversationStore = useConversationStore()
 
 onMounted(async () => {
-  providers.value = await db.providers.toArray()
+  providers.value = await providerStore.fetchProviders().then(() => providerStore.items)
 })
 
 const modelInfo = computed(() => {

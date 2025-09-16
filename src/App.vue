@@ -33,6 +33,7 @@ const items = computed(() => conversationStore.items)
 
 onMounted(async () => {
   await initProviders()
+
   conversationStore.fetchConversations()
 })
 </script>

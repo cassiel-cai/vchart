@@ -4,12 +4,14 @@ import { ConversationProps } from '../types'
 
 export interface ConversationStore {
   items: ConversationProps[]
+  selectedId: number
 }
 
 export const useConversationStore = defineStore('conversation', {
   state: (): ConversationStore => {
     return {
       items: [],
+      selectedId: -1,
     }
   },
   actions: {

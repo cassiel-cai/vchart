@@ -1,6 +1,14 @@
 <template>
   <div class="conversation-list">
-    <div v-for="item in conversations" :key="item.id" class="item border-gray-300 border-t cursor-pointer bg-white hover:bg-gray-200 p-2">
+    <div
+      v-for="item in conversations"
+      :key="item.id"
+      :class="{
+        'bg-gray-100 hover:bg-gray-300': conversationStore.selectedId === item.id,
+        'bg-white hover:bg-gray-200': conversationStore.selectedId !== item.id,
+      }"
+      class="item border-gray-300 border-t cursor-pointer p-2"
+    >
       <a @click.prevent="goToConversation(item.id)">
         <div class="flex justify-between items-center text-sm leading-5 text-gray-500">
           <span>{{ dayjs(item.selectedModel).format('YYYY-MM-DD') }}</span>
@@ -14,10 +22,12 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useConversationStore } from '../stores/conversation'
 import { ConversationProps } from '../types'
 import dayjs from 'dayjs'
 
-const router = useRouter()
+let router = useRouter()
+let conversationStore = useConversationStore()
 
 defineProps<{
   conversations: ConversationProps[]
@@ -26,11 +36,8 @@ defineProps<{
 const goToConversation = (id: number) => {
   router.push({
     path: `/conversation/${id}`,
-    query: {
-      name: 'CGS',
-      hash: '#foo',
-    },
   })
+  conversationStore.selectedId = id
 }
 </script>
 
