@@ -193,4 +193,8 @@ npm install dayjs --save
 
 # 16. 选择 Pinia 作为状态存储 https://pinia.vuejs.org/zh/getting-started.html
 npm install pinia
+# 16-1. 功能对比
+# ref() => state
+# computed() => getters
+# function() => actions
 ```
