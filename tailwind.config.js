@@ -8,5 +8,5 @@ module.exports = {
     extend: {},
   },
   // 告诉 Tailwind 如何使用插件
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

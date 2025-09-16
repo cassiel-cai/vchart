@@ -206,4 +206,22 @@ npm install pinia
 npm install vue-markdown-render --save
 # import VueMarkdown from 'vue-markdown-render'
 # <VueMarkdown :source="message.content" />
+
+# 18. 使用 Tailwind CSS Typography 插件 https://github.com/tailwindlabs/tailwindcss-typography
+# 为什么要有这个插件：
+#   Tailwvind CSS 默认对所有 HTML元素应用了一个非常激进的 reset 移除了几乎所有的默认样式。
+#   这种 reset 使得所有元素都从一个“干净的 slate “开始，有利于构建自定义设计。
+# 造成的问题：
+#   当处理富文本内容（如 Markdown 渲染的 HTML）时，这种 reset 会导致内容失去基本的排版样式。
+#   标题、段落、列表等元素会失去它们的默认外观，看起来都一样。
+# Typography 插件的作用：
+#   插件力这些被 reset 的元素重新引入了合理的默认样式。
+#   它在保持 Tailwind 灵活性的同时，为富文本内容提供了美观的基础样式。
+# Typography 的特点：
+#   默认样式：它为标题、段落、列表、引用等常见 HTML 元素提供了合理的默认样式。
+#   响应式设计：样式会根据屏幕大小自动调整，确保在各种设备上都能保持良好的可读性。
+#   主题定制：可以轻松地根据你的设计需求自定义样式。
+#   暗模式支持：提供了暗模式下的样式变体，使得内容在暗色主题下也能保持良好的可读性。
+#   易于使用：只需要在包含富文本内容的容器上添加 prose 类，就可以应用这些样式。
+npm install -D @tailwindcss/typography
 ```
