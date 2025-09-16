@@ -5,6 +5,7 @@ import started from 'electron-squirrel-startup' // 导入electron-squirrel-start
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { ChatCompletion } from '@baiducloud/qianfan'
+import OpenAI from 'openai'
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -23,12 +24,12 @@ const createWindow = async () => {
   })
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
-    const { providerName, selectedModel, content, messageId } = data
+    const { providerName, selectedModel, messages, messageId } = data
     if (providerName === 'qianfan') {
       const client = new ChatCompletion()
       const stream = await client.chat(
         {
-          messages: [{ role: 'user', content }],
+          messages,
           stream: true,
         },
         selectedModel
@@ -41,6 +42,27 @@ const createWindow = async () => {
           data: {
             in_end,
             result,
+          },
+        }
+        mainWindow.webContents.send('update-message', content)
+      }
+    } else if (providerName === 'dashscope') {
+      const client = new OpenAI({
+        apiKey: process.env['ALI_API_KEY'],
+        baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+      })
+      const stream = await client.chat.completions.create({
+        messages,
+        model: selectedModel,
+        stream: true,
+      })
+      for await (const chunk of stream as AsyncIterable<any>) {
+        const choice = chunk.choices[0]
+        const content = {
+          messageId,
+          data: {
+            in_end: choice.finish_reason === 'stop',
+            result: choice.delta.content || '',
           },
         }
         mainWindow.webContents.send('update-message', content)

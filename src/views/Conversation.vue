@@ -7,7 +7,7 @@
     <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
-    <MessageInput />
+    <MessageInput v-model="inputValue" @create="sendNewMessage" />
   </div>
 </template>
 
@@ -17,7 +17,7 @@ import { useRoute } from 'vue-router'
 import { useConversationStore } from '../stores/conversation'
 import { useMessageStore } from '../stores/message'
 import { db } from '../db'
-import { MessageProps, UpdatgedStreamData, MessageStatus } from '../types'
+import { MessageProps, UpdatgedStreamData } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
 import dayjs from 'dayjs'
@@ -27,10 +27,37 @@ let conversationStore = useConversationStore()
 let messageStore = useMessageStore()
 let conversationId = ref(parseInt(route.params.id as string))
 let initMessageId = parseInt(route.query.init as string)
+let inputValue = ref<string>('')
 
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value))
 const filteredMessages = computed(() => messageStore.items)
-const lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value))
+const sendedMessages = computed(() =>
+  filteredMessages.value
+    .filter(message => message.status !== 'loading')
+    .map(message => {
+      return {
+        role: message.type === 'question' ? 'user' : 'assistant',
+        content: message.content,
+      }
+    })
+)
+
+const sendNewMessage = async (question: string) => {
+  if (question) {
+    const date = new Date().toISOString()
+
+    await messageStore.createMessage({
+      content: question,
+      conversationId: conversationId.value,
+      createdAt: date,
+      updatedAt: date,
+      type: 'question',
+    })
+
+    inputValue.value = ''
+    creatingInitialMessage()
+  }
+}
 
 const creatingInitialMessage = async () => {
   const currentDate: Omit<MessageProps, 'id'> = {
@@ -51,7 +78,7 @@ const creatingInitialMessage = async () => {
         messageId: newMessageId,
         providerName: provider.name,
         selectedModel: conversation.value.selectedModel,
-        content: lastQuestion.value?.content || '',
+        messages: sendedMessages.value,
       })
     }
   }
