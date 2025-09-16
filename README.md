@@ -197,4 +197,13 @@ npm install pinia
 # ref() => state
 # computed() => getters
 # function() => actions
+
+# 17. 渲染 Markdown 文本，推荐 markdown-it 库 https://github.com/markdown-it/markdown-it
+# 遵循 CommonMark 规范，同时添加语法扩展和增强功能（自动链接URL，排版美化）
+# 易于扩展：由于模块化的设计，用户可以方便地编写自定义插件或者使用社区提供的插件来扩展 markdown-it 的功能。
+# 快速且高效：markdown-it 被设计为快速和高效的解析器，能够处理大量的 Markdown 文本并将其转换为 HTML。
+# 插件列表 https://www.npmjs.com/search?q=keywords:markdown-it-plugin
+npm install vue-markdown-render --save
+# import VueMarkdown from 'vue-markdown-render'
+# <VueMarkdown :source="message.content" />
 ```
