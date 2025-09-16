@@ -20,7 +20,7 @@ import { db } from '../db'
 import { MessageProps, UpdatgedStreamData } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
-import dayjs from 'dayjs'
+import dayjs from '../utils/dayjs'
 
 let route = useRoute()
 let conversationStore = useConversationStore()

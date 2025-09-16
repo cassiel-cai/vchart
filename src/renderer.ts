@@ -8,6 +8,7 @@ import Home from './views/Home.vue' // 导入 Home.vue
 import Conversation from './views/Conversation.vue' // 导入 Conversation.vue
 import Settings from './views/Settings.vue' // 导入 Settings.vue
 import './index.css' // 导入 index.css
+import 'highlight.js/styles/github-dark.css' // 导入 highlight.js 的 github-dark 样式
 
 const routers = [
   { path: '/', component: Home },

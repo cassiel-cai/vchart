@@ -224,4 +224,11 @@ npm install vue-markdown-render --save
 #   暗模式支持：提供了暗模式下的样式变体，使得内容在暗色主题下也能保持良好的可读性。
 #   易于使用：只需要在包含富文本内容的容器上添加 prose 类，就可以应用这些样式。
 npm install -D @tailwindcss/typography
+
+# 19. 使用 Highlight.js 完成语法高亮 https://highlightjs.org/
+# 支持多种编程语言：highlight.js 支持超过192 种编程语言和格式，包括常见的编程语言（如 JavaScript、Python、Java 等）和数据格式 （如JSON、XML等），使其适用于各种技术文章和博客。
+# 轻量级且易于集成：highight.js 是一个轻量级的库，文件体积小易于集成到网页项目中。只需简单引入相应的 JavaScript 和 css 文件，即可开始在页面中使用语法高亮功能。
+# 自动检测语言：highlight.js 可以自动检测代码块中的语言类型，无需手动指定，从而简化了使用过程，提高了开发效率。
+# 丰富的样式主题：highlight.js 提供了多种 498 样式主题可供选择，用户可以根据需求轻松切换不同的代码高亮风格，使代码块更加美观和易读。
+npm install markdown-it-highlightjs --save
 ```
