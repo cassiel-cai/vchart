@@ -11,6 +11,7 @@
     "baseUrl": ".", // 基础 URL
     "outDir": "dist", // 输出目录
     "moduleResolution": "node", // 使用 node 模块系统
-    "resolveJsonModule": true // 解析 JSON 模块
+    "resolveJsonModule": true, // 解析 JSON 模块
+    "noImplicitThis": true // 禁止隐式的 this 类型
   }
 }

@@ -3,6 +3,7 @@
     <div class="w-[300px] bg-gray-200 h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
         <ConversationList :conversations="items" />
+        <h3>{{ conversationStore.tolalNumber }}</h3>
       </div>
       <div class="h-[10%] grid grid-cols-2 gap-2 p-2">
         <router-link to="/">
@@ -21,19 +22,18 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { db, initProviders } from './db'
-import { conversations } from './testData'
+import { initProviders } from './db'
 import { useConversationStore } from './stores/conversation'
 import ConversationList from './components/ConversationList.vue'
 import VkButton from './components/Button.vue'
 
-const conversationStore = useConversationStore()
+let conversationStore = useConversationStore()
 
 const items = computed(() => conversationStore.items)
 
 onMounted(async () => {
   await initProviders()
-  conversationStore.items = await db.conversations.toArray()
+  conversationStore.fetchConversations()
 })
 </script>
 
