@@ -239,16 +239,35 @@ npm install markdown-it-highlightjs --save
 # }
 
 # 21. 添加图片上传功能和预览显示
-# <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageUpload" />
-# const handleImageUpload = (event: Event) => {
-#   const target = event.target as HTMLInputElement // 获取事件目标
-#   if (target.files && target.files.length > 0) { // 判断是否选择了文件
-#     const selectedImage = target.files[0] // 获取选择的文件
-#     const reader = new FileReader() // 创建 FileReader 对象
-#     reader.onload = e => {
-#       imagePreview.value = e.target?.result as string // 设置图片预览
-#     }
-#     reader.readAsDataURL(selectedImage) // 读取文件
+# src/preload.ts
+# selectImage: () => ipcRenderer.invoke('select-image'),◊
+# src/components/Messagelnput.vue
+# const triggerFileInput = async () => {
+#   if (props.disabled) return
+#   const res = await window.electronAPI.selectImage()
+#   if (res) {
+#     selectedImagePath.value = res.path
+#     imagePreview.value = res.dataURL || ''
+#   } else {
+#     selectedImagePath.value = null
+#     imagePreview.value = null
 #   }
 # }
+# src/main.ts
+# ipcMain.handle('select-image', async () => {
+#   const result = await dialog.showOpenDialog(mainWindow, {
+#     properties: ['openFile'],
+#     filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'] }],
+#   })
+#   if (result.canceled || result.filePaths.length === 0) return null
+#   const filePath = result.filePaths[0]
+#   const fileName = path.basename(filePath)
+#   const format = path.extname(filePath).slice(1).toLowerCase()
+#   const size = (await fs.stat(filePath)).size
+#   const image = nativeImage.createFromPath(filePath)
+#   const dataURL = image.isEmpty() ? '' : image.toDataURL()
+#   return { path: filePath, name: fileName, format, size, dataURL }
+# })
+# interface.d.ts
+# selectImage: () => Promise<{ path: string name: string format: string size: number dataURL: string } | null>
 ```
