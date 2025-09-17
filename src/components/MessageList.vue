@@ -1,5 +1,5 @@
 <template>
-  <div class="message-list">
+  <div ref="_ref" class="message-list">
     <div v-for="message in messages" :key="message.id" class="message-item mb-3">
       <div class="flex" :class="{ 'justify-end': message.type === 'question' }">
         <div>
@@ -13,7 +13,7 @@
             <template v-if="message.status === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
             </template>
-            <div v-else class="prose prose-slate prose-headings:my-2 prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-hr:my-0 prose-pre:mb-0 prose-pre:p-0">
+            <div v-else class="prose prose-slate prose-headings:my-2 prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-hr:my-0 prose-pre:mb-0 prose-pre:p-0 prose-blockquote:m-0">
               <VueMarkdown :source="message.content" :plugins="plugins" />
             </div>
           </div>
@@ -24,17 +24,23 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import VueMarkdown from 'vue-markdown-render'
 import markdownItHighlightjs from 'markdown-it-highlightjs'
 import { MessageProps } from '../types'
 import dayjs from '../utils/dayjs'
 
+let _ref = ref<HTMLDivElement>()
+let plugins = [markdownItHighlightjs]
+
 defineProps<{
   messages: MessageProps[]
-}>()
+}>() // 接收 messages 属性
 
-const plugins = [markdownItHighlightjs]
+defineExpose({
+  refl: _ref,
+}) // 暴露 ref 给父组件
 </script>
 
 <style scoped></style>

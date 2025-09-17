@@ -49,3 +49,7 @@ export interface UpdatgedStreamData {
 }
 
 export type onUpdatedCallback = (data: UpdatgedStreamData) => void
+
+export interface MessageListInstance {
+  refl: HTMLDivElement
+}

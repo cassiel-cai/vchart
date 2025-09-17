@@ -231,4 +231,10 @@ npm install -D @tailwindcss/typography
 # 自动检测语言：highlight.js 可以自动检测代码块中的语言类型，无需手动指定，从而简化了使用过程，提高了开发效率。
 # 丰富的样式主题：highlight.js 提供了多种 498 样式主题可供选择，用户可以根据需求轻松切换不同的代码高亮风格，使代码块更加美观和易读。
 npm install markdown-it-highlightjs --save
+
+# 20. 使用 scrollIntoView 函数让页面自动滚动到信息的最下方
+# await nextTick()
+# if (messageListRef.value) {
+#   messageListRef.value.refl.scrollIntoView({ block: 'end', behavior: 'smooth' })
+# }
 ```

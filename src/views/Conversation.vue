@@ -4,7 +4,7 @@
     <span class="text-sm text-gray-500">{{ dayjs(conversation?.updatedAt).format('YYYY-MM-DD') }}</span>
   </div>
   <div class="w-[80%] mx-auto h-[75%] overflow-y-auto pt-2">
-    <MessageList :messages="filteredMessages" />
+    <MessageList ref="messageListRef" :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
     <MessageInput v-model="inputValue" :disabled="messageStore.isMessageLoading" @create="sendNewMessage" />
@@ -12,12 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue'
+import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useConversationStore } from '../stores/conversation'
 import { useMessageStore } from '../stores/message'
-import { db } from '../db'
-import { MessageProps, UpdatgedStreamData } from '../types'
+import { useProviderStore } from '../stores/provider'
+import { MessageProps, UpdatgedStreamData, MessageListInstance } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
 import dayjs from '../utils/dayjs'
@@ -25,6 +25,8 @@ import dayjs from '../utils/dayjs'
 let route = useRoute()
 let conversationStore = useConversationStore()
 let messageStore = useMessageStore()
+let providerStore = useProviderStore()
+let messageListRef = ref<MessageListInstance>()
 let conversationId = ref(parseInt(route.params.id as string))
 let initMessageId = parseInt(route.query.init as string)
 let inputValue = ref<string>('')
@@ -59,6 +61,14 @@ const sendNewMessage = async (question: string) => {
   }
 }
 
+const messageListScrollToBottom = async () => {
+  await nextTick()
+
+  if (messageListRef.value) {
+    messageListRef.value.refl.scrollIntoView({ block: 'end', behavior: 'smooth' })
+  }
+}
+
 const creatingInitialMessage = async () => {
   const currentDate: Omit<MessageProps, 'id'> = {
     content: '',
@@ -72,7 +82,8 @@ const creatingInitialMessage = async () => {
   const newMessageId = await messageStore.createMessage(currentDate)
 
   if (conversation.value) {
-    const provider = await db.providers.where({ id: conversation.value.providerId }).first()
+    const provider = providerStore.getProviderById(conversation.value.providerId)
+
     if (provider) {
       await window.electronAPI.startChat({
         messageId: newMessageId,
@@ -89,11 +100,14 @@ watch(
   async (newId: string) => {
     conversationId.value = parseInt(newId)
     await messageStore.fetchMessagesByCoverseation(conversationId.value)
+    await messageListScrollToBottom()
   }
 )
 
 onMounted(async () => {
   await messageStore.fetchMessagesByCoverseation(conversationId.value)
+
+  await messageListScrollToBottom()
 
   if (initMessageId) {
     await creatingInitialMessage()

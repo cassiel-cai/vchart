@@ -17,5 +17,10 @@ export const useProviderStore = defineStore('provider', {
       const items = await db.providers.toArray()
       this.items = items
     },
-  }
+  },
+  getters: {
+    getProviderById: state => (id: number) => {
+      return state.items.find(item => item.id === id)
+    },
+  },
 })
