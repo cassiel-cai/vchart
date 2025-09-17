@@ -33,7 +33,7 @@ export const useMessageStore = defineStore('message', {
       if (currentMessage) {
         const updatedDate = {
           content: currentMessage.content + data.result,
-          status: data.in_end ? ('finished' as MessageStatus) : ('streaming' as MessageStatus),
+          status: data.is_end ? ('finished' as MessageStatus) : ('streaming' as MessageStatus),
           updatedAt: new Date().toISOString(),
         }
 

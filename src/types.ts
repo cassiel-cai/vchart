@@ -43,7 +43,7 @@ export interface CreateChatProps {
 export interface UpdatgedStreamData {
   messageId: number
   data: {
-    in_end: boolean
+    is_end: boolean
     result: string
   }
 }

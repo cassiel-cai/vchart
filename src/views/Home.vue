@@ -13,15 +13,16 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProviderStore } from '../stores/provider'
-import { db } from '../db'
-import { ProviderProps } from '../types'
+import { useMessageStore } from '../stores/message'
 import { useConversationStore } from '../stores/conversation'
+import { ProviderProps } from '../types'
 import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/Messagelnput.vue'
 
 let router = useRouter()
 let providerStore = useProviderStore()
 let conversationStore = useConversationStore()
+let messageStore = useMessageStore()
 let currentProvider = ref<string>('')
 let providers = ref<ProviderProps[]>([])
 
@@ -47,13 +48,8 @@ const createConversation = async (question: string) => {
     createdAt: currentDate,
     updatedAt: currentDate,
   }) // 添加 conversation
-  const newMessageId = await db.messages.add({
-    conversationId,
-    type: 'question',
-    content: question,
-    createdAt: currentDate,
-    updatedAt: currentDate,
-  }) // 添加 message
+
+  const newMessageId = await messageStore.createMessage({ conversationId, type: 'question', content: question, createdAt: currentDate, updatedAt: currentDate }) // 添加 message
 
   router.push(`/conversation/${conversationId}?init=${newMessageId}`)
 }

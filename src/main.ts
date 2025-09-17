@@ -4,8 +4,8 @@ import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
-import { ChatCompletion } from '@baiducloud/qianfan'
-import OpenAI from 'openai'
+import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
+import OpenAI from 'openai' // 导入 OpenAI
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -36,11 +36,11 @@ const createWindow = async () => {
       )
 
       for await (const chunk of stream as AsyncIterable<any>) {
-        const { in_end, result } = chunk
+        const { is_end, result } = chunk
         const content = {
           messageId,
           data: {
-            in_end,
+            is_end,
             result,
           },
         }
@@ -61,7 +61,7 @@ const createWindow = async () => {
         const content = {
           messageId,
           data: {
-            in_end: choice.finish_reason === 'stop',
+            is_end: choice.finish_reason === 'stop',
             result: choice.delta.content || '',
           },
         }
