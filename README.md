@@ -237,4 +237,18 @@ npm install markdown-it-highlightjs --save
 # if (messageListRef.value) {
 #   messageListRef.value.refl.scrollIntoView({ block: 'end', behavior: 'smooth' })
 # }
+
+# 21. 添加图片上传功能和预览显示
+# <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageUpload" />
+# const handleImageUpload = (event: Event) => {
+#   const target = event.target as HTMLInputElement // 获取事件目标
+#   if (target.files && target.files.length > 0) { // 判断是否选择了文件
+#     const selectedImage = target.files[0] // 获取选择的文件
+#     const reader = new FileReader() // 创建 FileReader 对象
+#     reader.onload = e => {
+#       imagePreview.value = e.target?.result as string // 设置图片预览
+#     }
+#     reader.readAsDataURL(selectedImage) // 读取文件
+#   }
+# }
 ```
