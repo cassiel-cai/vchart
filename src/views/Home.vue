@@ -38,9 +38,19 @@ const modelInfo = computed(() => {
   }
 })
 
-const createConversation = async (question: string) => {
+const createConversation = async (question: string, imagePath?: string | null) => {
   const { providerId, selectedModel } = modelInfo.value // 获取 providerId 和 selectedModel
   const currentDate = new Date().toISOString() // 获取当前日期
+  let copiedImagePath: string | null = null
+
+  if (imagePath) {
+    try {
+      copiedImagePath = await window.electronAPI.copyImageToUserDir(imagePath) // 复制图片路径
+    } catch (error) {
+      console.error(`Failed to copy image to user dir: ${error}`)
+    }
+  }
+
   const conversationId = await conversationStore.createCoversation({
     providerId,
     selectedModel,
@@ -49,7 +59,14 @@ const createConversation = async (question: string) => {
     updatedAt: currentDate,
   }) // 添加 conversation
 
-  const newMessageId = await messageStore.createMessage({ conversationId, type: 'question', content: question, createdAt: currentDate, updatedAt: currentDate }) // 添加 message
+  const newMessageId = await messageStore.createMessage({
+    conversationId,
+    type: 'question',
+    content: question,
+    createdAt: currentDate,
+    updatedAt: currentDate,
+    ...(copiedImagePath && { imagePath: copiedImagePath }),
+  }) // 添加 message
 
   router.push(`/conversation/${conversationId}?init=${newMessageId}`)
 }

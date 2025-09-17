@@ -1,11 +1,12 @@
 /*主进程文件*/
-import { app, BrowserWindow, ipcMain } from 'electron' // 导入app和BrowserWindow
+import { app, BrowserWindow, ipcMain, dialog, nativeImage } from 'electron' // 导入app和BrowserWindow
 import path from 'node:path' // 导入path
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import OpenAI from 'openai' // 导入 OpenAI
+import fs from 'fs/promises' // 导入fs
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -21,6 +22,38 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), // 预加载脚本
     },
+  })
+
+  ipcMain.handle('select-image', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'], // 打开文件对话框
+      filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'] }], // 过滤图片文件
+    }) // 显示打开文件对话框
+
+    if (result.canceled || result.filePaths.length === 0) return null // 判断是否取消或没有选择图片
+
+    const filePath = result.filePaths[0] // 获取图片路径
+    const fileName = path.basename(filePath) // 文件名
+    const format = path.extname(filePath).slice(1).toLowerCase() // 扩展名(不带点)
+    const size = (await fs.stat(filePath)).size // 文件大小(字节)
+    const image = nativeImage.createFromPath(filePath) // 创建图片
+    const dataURL = image.isEmpty() ? '' : image.toDataURL() // 获取图片数据URL
+    
+    return { path: filePath, name: fileName, format, size, dataURL } // 返回图片详细信息
+  })
+
+  ipcMain.handle('copy-image-to-user-dir', async (event, sourcePath: string) => {
+    const userDataPath = app.getPath('userData') // 获取用户数据目录
+    const imageDir = path.join(userDataPath, 'images') // 获取图片目录
+
+    await fs.mkdir(imageDir, { recursive: true }) // 创建图片目录
+
+    const fileName = path.basename(sourcePath)
+    const destPath = path.join(imageDir, fileName)
+
+    await fs.copyFile(sourcePath, destPath)
+
+    return destPath
   })
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {

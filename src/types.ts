@@ -28,6 +28,7 @@ export interface MessageProps {
   status?: MessageStatus
   createdAt: string
   updatedAt: string
+  imagePath?: string
 }
 
 export interface CreateChatProps {

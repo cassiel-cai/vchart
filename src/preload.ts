@@ -8,4 +8,6 @@ import { CreateChatProps, onUpdatedCallback } from './types' // 导入 CreateCha
 contextBridge.exposeInMainWorld('electronAPI', {
   startChat: (data: CreateChatProps) => ipcRenderer.send('start-chat', data), // 暴露 startChat 方法到渲染进程
   onUpdateMessage: (callback: onUpdatedCallback) => ipcRenderer.on('update-message', (_event, data) => callback(data)), // 暴露 onUpdateMessage 方法到渲染进程
+  selectImage: () => ipcRenderer.invoke('select-image'), // 暴露 selectImage 方法到渲染进程
+  copyImageToUserDir: (sourcePath: string) => ipcRenderer.invoke('copy-image-to-user-dir', sourcePath), // 暴露 copyImageToUserDir 方法到渲染进程
 })
