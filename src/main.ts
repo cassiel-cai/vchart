@@ -1,12 +1,12 @@
 /*主进程文件*/
 import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net } from 'electron' // 导入app和BrowserWindow
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
-import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import OpenAI from 'openai' // 导入 OpenAI
 import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
 import 'dotenv/config' // 导入dotenv
+import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { convertMessages } from './helper' // 导入 converMessages
 
