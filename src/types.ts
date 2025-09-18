@@ -57,3 +57,13 @@ export type onUpdatedCallback = (data: UpdatgedStreamData) => void
 export interface MessageListInstance {
   refl: HTMLDivElement
 }
+
+export interface UniversalChunkProps {
+  is_end: boolean
+  result: string
+}
+
+export interface BaiduChunkProps {
+  is_end: boolean
+  result: string
+}

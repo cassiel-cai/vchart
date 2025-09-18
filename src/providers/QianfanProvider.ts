@@ -1,6 +1,6 @@
 import { ChatCompletion } from '@baiducloud/qianfan'
 import { BaseProvider } from './BaseProvider'
-import { ChatMessageProps } from '../types'
+import { ChatMessageProps, BaiduChunkProps, UniversalChunkProps } from '../types'
 
 export class QianfanProvider extends BaseProvider {
   private client: any
@@ -18,6 +18,21 @@ export class QianfanProvider extends BaseProvider {
       model
     )
 
-    return stream
+    const _this = this
+
+    return {
+      async *[Symbol.asyncIterator]() {
+        for await (const chunk of stream) {
+          yield _this.transformResponse(chunk)
+        }
+      },
+    }
+  }
+
+  protected transformResponse(chunk: BaiduChunkProps): UniversalChunkProps {
+    return {
+      is_end: chunk.is_end,
+      result: chunk.result,
+    }
   }
 }
