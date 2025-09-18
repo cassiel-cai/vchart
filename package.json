@@ -44,11 +44,13 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.2.3",
+    "@types/mime-types": "^3.0.1",
     "dayjs": "^1.11.18",
     "dexie": "^4.2.0",
     "dotenv": "^17.2.2",
     "electron-squirrel-startup": "^1.0.1",
     "markdown-it-highlightjs": "^4.2.0",
+    "mime-types": "^3.0.1",
     "openai": "^5.20.1",
     "pinia": "^3.0.3",
     "radix-vue": "^1.9.17",
