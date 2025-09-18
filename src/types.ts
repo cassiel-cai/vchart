@@ -31,12 +31,14 @@ export interface MessageProps {
   imagePath?: string
 }
 
+export interface ChatMessageProps {
+  role: string
+  content: string
+  imagePath?: string | null
+}
+
 export interface CreateChatProps {
-  messages: {
-    role: string
-    content: string
-    imagePath?: string | null
-  }[]
+  messages: ChatMessageProps[]
   providerName: string
   selectedModel: string
   messageId: number

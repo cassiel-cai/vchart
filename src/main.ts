@@ -9,7 +9,6 @@ import 'dotenv/config' // 导入dotenv
 import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { convertMessages } from './helper' // 导入 converMessages
-
 import { lookup } from 'mime-types' // 导入 lookup
 
 // 处理Windows上的快捷方式创建/删除
