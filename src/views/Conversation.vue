@@ -7,7 +7,7 @@
     <MessageList ref="messageListRef" :messages="filteredMessages" />
   </div>
   <div class="w-[80%] mx-auto h-[15%] flex items-center">
-    <MessageInput v-model="inputValue" :disabled="messageStore.isMessageLoading" @create="sendNewMessage" />
+    <MessageInput v-model="inputValue" :updateImgHide="conversationStore.selectedModel === 'qwen-vl-plus'" :disabled="messageStore.isMessageLoading" @create="sendNewMessage" />
   </div>
 </template>
 

@@ -14,7 +14,7 @@
             <template v-if="message.status === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
             </template>
-            <div v-else class="prose prose-slate prose-headings:my-2 prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-hr:my-0 prose-pre:mb-0 prose-pre:p-0 prose-blockquote:m-0">
+            <div v-else class="prose prose-slate prose-headings:my-2 prose-p:my-1 prose-ol:my-0 prose-ul:my-1 prose-li:my-0 prose-hr:my-0 prose-pre:mb-0 prose-pre:p-0 prose-blockquote:m-0">
               <VueMarkdown :source="message.content" :plugins="plugins" />
             </div>
           </div>

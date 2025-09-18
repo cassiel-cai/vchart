@@ -4,13 +4,13 @@
       <ProviderSelect :providers="providers" v-model="currentProvider" />
     </div>
     <div class="flex items-center h-[15%]">
-      <MessageInput :disabled="currentProvider === ''" @create="createConversation" />
+      <MessageInput :updateImgHide="conversationStore.selectedModel === 'qwen-vl-plus'" :disabled="currentProvider === ''" @create="createConversation" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProviderStore } from '../stores/provider'
 import { useMessageStore } from '../stores/message'
@@ -30,8 +30,13 @@ onMounted(async () => {
   providers.value = await providerStore.fetchProviders().then(() => providerStore.items)
 })
 
+watch(currentProvider, newVal => {
+  conversationStore.setSelectedModel(newVal.split('/')[1])
+})
+
 const modelInfo = computed(() => {
   const [providerId, selectedModel] = currentProvider.value.split('/')
+
   return {
     providerId: parseInt(providerId),
     selectedModel,

@@ -28,7 +28,6 @@ import dayjs from '../utils/dayjs'
 
 let router = useRouter()
 let conversationStore = useConversationStore()
-
 defineProps<{
   conversations: ConversationProps[]
 }>()
@@ -38,6 +37,7 @@ const goToConversation = (id: number) => {
     path: `/conversation/${id}`,
   })
   conversationStore.selectedId = id
+  conversationStore.setSelectedModel(conversationStore.getConversationById(id)?.selectedModel || '')
 }
 </script>
 

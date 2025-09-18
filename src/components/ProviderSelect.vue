@@ -58,7 +58,7 @@ defineProps<{
   providers: ProviderProps[]
 }>()
 
-const currentModel = defineModel<string>()
+let currentModel = defineModel<string>()
 </script>
 
 <style scoped></style>

@@ -4,7 +4,8 @@ import { ConversationProps } from '../types'
 
 export interface ConversationStore {
   items: ConversationProps[]
-  selectedId: number
+  selectedId: number,
+  selectedModel: string
 }
 
 export const useConversationStore = defineStore('conversation', {
@@ -12,9 +13,14 @@ export const useConversationStore = defineStore('conversation', {
     return {
       items: [],
       selectedId: -1,
+      selectedModel: '',
     }
   },
   actions: {
+    async setSelectedModel(model: string) {
+      this.selectedModel = model
+    },
+    
     async fetchConversations() {
       const items = await db.conversations.toArray()
       this.items = items
@@ -35,5 +41,6 @@ export const useConversationStore = defineStore('conversation', {
     getConversationById: state => (id: number) => {
       return state.items.find(item => item.id === id)
     },
+
   },
 })

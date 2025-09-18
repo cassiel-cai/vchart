@@ -5,6 +5,7 @@
     </div>
     <div class="flex items-center">
       <Icon
+        v-if="updateImgHide"
         icon="radix-icons:image"
         width="24"
         height="24"
@@ -24,6 +25,7 @@ import VkButton from '../components/Button.vue'
 
 let props = defineProps<{
   disabled?: boolean
+  updateImgHide?: boolean
 }>()
 
 let emit = defineEmits<{
