@@ -1,13 +1,17 @@
 /*主进程文件*/
-import { app, BrowserWindow, ipcMain, dialog, nativeImage } from 'electron' // 导入app和BrowserWindow
-import path from 'node:path' // 导入path
+import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net } from 'electron' // 导入app和BrowserWindow
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
-import 'dotenv/config' // 导入dotenv
-import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import OpenAI from 'openai' // 导入 OpenAI
+import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
+import url from 'url' // 导入url
+import 'dotenv/config' // 导入dotenv
+import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { convertMessages } from './helper' // 导入 converMessages
+
+import { lookup } from 'mime-types' // 导入 lookup
+
 // 处理Windows上的快捷方式创建/删除
 if (started) {
   app.quit()
@@ -23,6 +27,21 @@ const createWindow = async () => {
       preload: path.join(__dirname, 'preload.js'), // 预加载脚本
     },
   })
+
+  protocol.handle('safe-file', async request => {
+    const filePath = decodeURIComponent(request.url.slice('safe-file://'.length)) // decodeURIComponent 解码URL中的特殊字符
+
+    /*  const data = await fs.readFile(filePath) // 读取文件
+    return new Response(data as any, {
+      status: 200,
+      headers: {
+        'Content-Type': lookup(filePath) as string,
+      },
+    }) */
+
+    const newFilePath = url.pathToFileURL(filePath).toString() // 将文件路径转换为URL
+    return net.fetch(newFilePath) // 返回文件数据
+  }) // 处理 safe-file 协议
 
   ipcMain.handle('select-image', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
