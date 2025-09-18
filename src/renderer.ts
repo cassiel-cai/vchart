@@ -25,6 +25,7 @@ router.beforeEach(to => {
   let conversationStore = useConversationStore() // 获取 conversationStore
   if (!to.path.startsWith('/conversation/')) {
     conversationStore.selectedId = -1
+    conversationStore.selectedModel = ''
   } // 如果路由不是 /conversation/ 开头，则设置 selectedId 为 -1
 }) // 在路由跳转前设置 selectedId
 

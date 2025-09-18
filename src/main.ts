@@ -1,15 +1,13 @@
 /*主进程文件*/
 import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net } from 'electron' // 导入app和BrowserWindow
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
-import OpenAI from 'openai' // 导入 OpenAI
 import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
 import 'dotenv/config' // 导入dotenv
-import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
-import { convertMessages } from './helper' // 导入 converMessages
-import { lookup } from 'mime-types' // 导入 lookup
+import { createProvider } from './providers/createProvider' // 导入 createProvider
+// import { lookup } from 'mime-types' // 导入 lookup
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -76,49 +74,16 @@ const createWindow = async () => {
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     const { providerName, selectedModel, messages, messageId } = data
-    const convertedMessages = await convertMessages(messages)
-    if (providerName === 'qianfan') {
-      const client = new ChatCompletion()
-      const stream = await client.chat(
-        {
-          messages: convertedMessages as any,
-          stream: true,
-        },
-        selectedModel
-      )
 
-      for await (const chunk of stream as AsyncIterable<any>) {
-        const { is_end, result } = chunk
-        const content = {
-          messageId,
-          data: {
-            is_end,
-            result,
-          },
-        }
-        mainWindow.webContents.send('update-message', content)
+    const provider = createProvider(providerName)
+    const stream = await provider.chat(messages, selectedModel)
+
+    for await (const chunk of stream) {
+      const content = {
+        messageId,
+        data: chunk,
       }
-    } else if (providerName === 'dashscope') {
-      const client = new OpenAI({
-        apiKey: process.env['ALI_API_KEY'],
-        baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-      })
-      const stream = await client.chat.completions.create({
-        messages: convertedMessages as any,
-        model: selectedModel,
-        stream: true,
-      })
-      for await (const chunk of stream as AsyncIterable<any>) {
-        const choice = chunk.choices[0]
-        const content = {
-          messageId,
-          data: {
-            is_end: choice.finish_reason === 'stop',
-            result: choice.delta.content || '',
-          },
-        }
-        mainWindow.webContents.send('update-message', content)
-      }
+      mainWindow.webContents.send('update-message', content)
     }
   })
 
