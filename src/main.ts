@@ -7,7 +7,7 @@ import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { ChatCompletion } from '@baiducloud/qianfan' // 导入 ChatCompletion
 import OpenAI from 'openai' // 导入 OpenAI
 import fs from 'fs/promises' // 导入fs
-
+import { convertMessages } from './helper' // 导入 converMessages
 // 处理Windows上的快捷方式创建/删除
 if (started) {
   app.quit()
@@ -38,7 +38,7 @@ const createWindow = async () => {
     const size = (await fs.stat(filePath)).size // 文件大小(字节)
     const image = nativeImage.createFromPath(filePath) // 创建图片
     const dataURL = image.isEmpty() ? '' : image.toDataURL() // 获取图片数据URL
-    
+
     return { path: filePath, name: fileName, format, size, dataURL } // 返回图片详细信息
   })
 
@@ -58,11 +58,12 @@ const createWindow = async () => {
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     const { providerName, selectedModel, messages, messageId } = data
+    const convertedMessages = await convertMessages(messages)
     if (providerName === 'qianfan') {
       const client = new ChatCompletion()
       const stream = await client.chat(
         {
-          messages,
+          messages: convertedMessages as any,
           stream: true,
         },
         selectedModel
@@ -85,7 +86,7 @@ const createWindow = async () => {
         baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
       })
       const stream = await client.chat.completions.create({
-        messages,
+        messages: convertedMessages as any,
         model: selectedModel,
         stream: true,
       })

@@ -132,7 +132,7 @@ export const providers: ProviderProps[] = [
     name: 'dashscope',
     title: '阿里灵积',
     desc: '通义千问 阿里巴巴推出的智能助手，拥有强大的语言理解和生成能力。',
-    models: ['qwen-turbo', 'qwen-plus', 'qwen-vl'],
+    models: ['qwen-turbo', 'qwen-plus', 'qwen-max', 'qwen-vl-plus'],
     avatar:
       'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.KgYRABrOrO5Fi-DIkSGFhgHaHa%3Fpid%3DApi&f=1&ipt=9e4e41655f5e05c65c17d0548f367af30df492f76ed8a66227cb99fdb49428b5&ipo=images',
     createdAt: '2025-09-01',

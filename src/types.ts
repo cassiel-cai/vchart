@@ -33,8 +33,9 @@ export interface MessageProps {
 
 export interface CreateChatProps {
   messages: {
-    role: 'user' | 'assistant'
+    role: string
     content: string
+    imagePath?: string | null
   }[]
   providerName: string
   selectedModel: string
