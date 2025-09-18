@@ -270,4 +270,54 @@ npm install markdown-it-highlightjs --save
 # })
 # interface.d.ts
 # selectImage: () => Promise<{ path: string name: string format: string size: number dataURL: string } | null>
+
+# 22. 可迭代对象 https://zh.javascript.info/iterable
+# 可迭代（Iterable）对象是数组的泛化。这个概念是说任何对象都可以被定制为可在 for..of 循环中使用的对象。
+# 数组是可迭代的。但不仅仅是数组。很多其他内建对象也都是可迭代的。例如字符串也是可迭代的。
+# 文件 generator.js 测试
+# const range = {
+#   from: 1,
+#   to: 5,
+#   [Symbol.iterator]() {
+#     let current = this.from
+#     return {
+#       next: () => {
+#         if (current <= this.to) {
+#           return { done: false, value: current++ }
+#         } else {
+#           return { done: true }
+#         }
+#       },
+#     }
+#   },
+# }
+# const run = () => {
+#   for (const item of range) {
+#     console.log('item', item)
+#   }
+# }
+# run()
+
+# 23. 生成器函数（Generator） https://zh.javascript.info/generators
+# generator（生成器）特点简述
+# - 可暂停和恢复：`yield` 语句让函数执行可中断、恢复。
+# - 惰性求值：每次 `next()` 只生成一个值，节省内存。
+# - 可双向通信：`next(value)` 可向生成器内部传值。
+# - 原生可迭代：生成器对象可直接用于 `for...of`。
+# - 适合异步流程控制：可配合 Promise 实现同步风格的异步代码。
+# const range = {
+#   from: 1,
+#   to: 5,
+#   *[Symbol.iterator]() {
+#     for (let current = this.from; current <= this.to; current++) {
+#       yield current
+#     }
+#   },
+# }
+# const run = () => {
+#   for (const item of range) {
+#     console.log('item', item)
+#   }
+# }
+# run()
 ```
