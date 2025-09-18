@@ -320,4 +320,28 @@ npm install markdown-it-highlightjs --save
 #   }
 # }
 # run()
+
+# 24. 学习异步可迭代对象 Async Iterable
+# 异步可迭代对象（Async Iterable）特点简述
+# - 支持异步数据流：可用于处理需要等待的异步数据（如网络、文件流）。
+# - 通过 `for await...of` 遍历：可直接在异步循环中消费数据。
+# - 实现 Symbol.asyncIterator 方法：返回一个带有 async next() 的对象或 async 生成器。
+# - 按需拉取数据：每次迭代时可异步获取下一个值，适合大数据量或流式场景。
+# - 便于与 Promise 结合：每次迭代可等待 Promise 结果，流程更自然。
+# const asyncRange = {
+#   from: 1,
+#   to: 5,
+#   async *[Symbol.asyncIterator]() {
+#     for (let current = this.from; current <= this.to; current++) {
+#       await new Promise((resolve) => setTimeout(resolve, 500))
+#       yield current
+#     }
+#   },
+# }
+# const run = async() => {
+#   for await (const item of asyncRange) {
+#     console.log('item', item)
+#   }
+# }
+# run()
 ```
