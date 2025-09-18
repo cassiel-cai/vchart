@@ -39,8 +39,8 @@ const modelInfo = computed(() => {
 })
 
 const createConversation = async (question: string, imagePath?: string | null) => {
-  const { providerId, selectedModel } = modelInfo.value // 获取 providerId 和 selectedModel
-  const currentDate = new Date().toISOString() // 获取当前日期
+  let { providerId, selectedModel } = modelInfo.value // 获取 providerId 和 selectedModel
+  let currentDate = new Date().toISOString() // 获取当前日期
   let copiedImagePath: string | null = null
 
   if (imagePath) {

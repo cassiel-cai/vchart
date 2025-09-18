@@ -17,7 +17,7 @@ import { useRoute } from 'vue-router'
 import { useConversationStore } from '../stores/conversation'
 import { useMessageStore } from '../stores/message'
 import { useProviderStore } from '../stores/provider'
-import { MessageProps, UpdatgedStreamData, MessageListInstance } from '../types'
+import { MessageProps, UpdatgedStreamData, MessageListInstance, MessageStatus } from '../types'
 import MessageInput from '../components/Messagelnput.vue'
 import MessageList from '../components/MessageList.vue'
 import dayjs from '../utils/dayjs'
@@ -45,9 +45,18 @@ const sendedMessages = computed(() =>
     })
 )
 
-const sendNewMessage = async (question: string) => {
+const sendNewMessage = async (question: string, imagePath?: string | null) => {
   if (question) {
-    const date = new Date().toISOString()
+    let date = new Date().toISOString()
+    let copiedImagePath: string | null = null
+
+    if (imagePath) {
+      try {
+        copiedImagePath = await window.electronAPI.copyImageToUserDir(imagePath)
+      } catch (error) {
+        console.error(`Failed to copy image to user dir: ${error}`)
+      }
+    }
 
     await messageStore.createMessage({
       content: question,
@@ -55,6 +64,7 @@ const sendNewMessage = async (question: string) => {
       createdAt: date,
       updatedAt: date,
       type: 'question',
+      ...(copiedImagePath && { imagePath: copiedImagePath }),
     })
 
     inputValue.value = ''
@@ -117,6 +127,8 @@ onMounted(async () => {
   }
 
   let currentMessageListHeight = 0
+  let streamContent = ''
+
   const checkAndScrollToBottom = async () => {
     if (messageListRef.value) {
       const newHeight = messageListRef.value.refl.clientHeight
@@ -128,9 +140,21 @@ onMounted(async () => {
   }
 
   window.electronAPI.onUpdateMessage(async (streamData: UpdatgedStreamData) => {
-    await messageStore.updateMessage(streamData)
+    const { messageId, data } = streamData
+    streamContent += data.result
+    const updatedDate = {
+      content: streamContent,
+      status: data.is_end ? ('finished' as MessageStatus) : ('streaming' as MessageStatus),
+      updatedAt: new Date().toISOString(),
+    }
+
+    await messageStore.updateMessage(messageId, updatedDate)
     await nextTick()
     await checkAndScrollToBottom()
+
+    if (data.is_end) {
+      streamContent = ''
+    }
   })
 })
 </script>
