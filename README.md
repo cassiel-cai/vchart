@@ -65,7 +65,7 @@ npm install @baiducloud/qianfan
 #   setEnvVariable( 'QIANFAN_SECRET_KEY', 'your_secret_key');
 # (3)通过参数：
 #   import {ChatCompletion} from "@baiducloud/qianfan";
-#   const client = new ChatCompletion ({ QIANFAN_ACCESS_KFY: '',QIANFAN_SECRET_KEY: ''})
+#   const client = new ChatCompletion ({ QIANFAN_ACCESS_KFY: '',QIANFAN_SECRET_KEY: '', ENABLE_OAUTH: true})
 # 7-4. 使用SDK
 # import { ChatCompletion } from '@baiducloud/qianfan'
 # const client = new ChatCompletion()
