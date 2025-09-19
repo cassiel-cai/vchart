@@ -17,6 +17,12 @@ export interface IElectronAPI {
   // 菜单事件监听
   onMenuNewConversation: (callback: () => void) => any
   onMenuOpenSettings: (callback: () => void) => any
+
+  // 右键菜单：会话列表
+  showConversationContextMenu: (conversationId?: number) => Promise<void>
+
+  // 会话删除事件
+  onConversationDelete: (callback: (conversationId?: number) => void) => any
 } // 声明 ElectronAPI 类型
 
 declare global {

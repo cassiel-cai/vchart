@@ -4,7 +4,7 @@ import { ConversationProps } from '../types'
 
 export interface ConversationStore {
   items: ConversationProps[]
-  selectedId: number,
+  selectedId: number
   selectedModel: string
 }
 
@@ -20,7 +20,7 @@ export const useConversationStore = defineStore('conversation', {
     async setSelectedModel(model: string) {
       this.selectedModel = model
     },
-    
+
     async fetchConversations() {
       const items = await db.conversations.toArray()
       this.items = items
@@ -34,6 +34,17 @@ export const useConversationStore = defineStore('conversation', {
       })
       return newCid
     },
+
+    async deleteConversation(conversationId: number) {
+      // 删除会话及其消息
+      await db.messages.where({ conversationId }).delete()
+      await db.conversations.delete(conversationId)
+      this.items = this.items.filter(item => item.id !== conversationId)
+      if (this.selectedId === conversationId) {
+        this.selectedId = -1
+        this.selectedModel = ''
+      }
+    },
   },
 
   getters: {
@@ -41,6 +52,5 @@ export const useConversationStore = defineStore('conversation', {
     getConversationById: state => (id: number) => {
       return state.items.find(item => item.id === id)
     },
-
   },
 })

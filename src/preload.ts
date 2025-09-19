@@ -16,4 +16,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 菜单事件
   onMenuNewConversation: (callback: () => void) => ipcRenderer.on('menu:new-conversation', () => callback()),
   onMenuOpenSettings: (callback: () => void) => ipcRenderer.on('menu:open-settings', () => callback()),
+
+  // 右键菜单：会话列表
+  showConversationContextMenu: (conversationId?: number) => ipcRenderer.invoke('show-conversation-context-menu', conversationId),
+
+  // 会话删除事件
+  onConversationDelete: (callback: (conversationId?: number) => void) => ipcRenderer.on('conversation:delete', (_e, id?: number) => callback(id)),
 })

@@ -1,9 +1,10 @@
 /*主进程文件*/
-import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net } from 'electron' // 导入app和BrowserWindow
+import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net, Menu } from 'electron' // 导入app和BrowserWindow
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
+import util from 'util' // 导入util
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { createProvider } from './providers/createProvider' // 导入 createProvider
@@ -35,6 +36,41 @@ const createWindow = async () => {
   // 设置应用菜单（基于当前语言）
   const currentConfig = configManager.get()
   setupMenu(mainWindow, currentConfig.language)
+
+  // 会话列表右键菜单：仅显示“删除对话”，支持国际化，并在点击后弹出确认
+  ipcMain.handle('show-conversation-context-menu', async (event, conversationId?: number) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    const lang = configManager.get().language
+    const label = lang === 'zh' ? '删除对话' : 'Delete Conversation'
+    const confirmTitle = lang === 'zh' ? '确认删除' : 'Confirm Deletion'
+    const message = lang === 'zh' ? '确定要删除该对话及其所有消息吗？' : 'Are you sure you want to delete this conversation and all its messages?'
+    const detail = lang === 'zh' ? '此操作不可撤销。' : 'This action cannot be undone.'
+    const btnDelete = lang === 'zh' ? '删除' : 'Delete'
+    const btnCancel = lang === 'zh' ? '取消' : 'Cancel'
+
+    const menu = Menu.buildFromTemplate([
+      {
+        label,
+        click: async () => {
+          const res = await dialog.showMessageBox(win, {
+            type: 'none', // 移除图标，仅显示文字
+            title: confirmTitle,
+            message,
+            detail, // 将说明拆分为 detail，有助于在 macOS 上拉宽弹窗
+            buttons: [btnDelete, btnCancel],
+            defaultId: 1,
+            cancelId: 1,
+            noLink: true,
+          })
+          if (res.response === 0) {
+            win.webContents.send('conversation:delete', conversationId)
+          }
+        },
+      },
+    ])
+    menu.popup({ window: win })
+  })
 
   protocol.handle('safe-file', async request => {
     const filePath = decodeURIComponent(request.url.slice('safe-file://'.length)) // decodeURIComponent 解码URL中的特殊字符
