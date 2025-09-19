@@ -1,15 +1,15 @@
 <template>
   <div class="flex items-center justify-between h-screen">
     <div class="w-[300px] bg-gray-200 h-full border-r border-gray-300">
-      <div class="h-[90%] overflow-y-auto">
+      <div class="h-[90%] overflow-y-auto bg-white">
         <ConversationList :conversations="items" />
       </div>
-      <div class="h-[10%] grid grid-cols-2 gap-2 p-2">
+      <div class="h-[10%] flex justify-center items-center space-x-4 border-t-2 border-gray-300 bg-white">
         <router-link to="/">
-          <VkButton color="green" iconName="radix-icons:chat-bubble">新建聊天</VkButton>
+          <VkButton color="green" iconName="radix-icons:chat-bubble">{{ t('app.newChat') }}</VkButton>
         </router-link>
         <router-link to="/settings">
-          <VkButton color="green" plain iconName="radix-icons:gear">应用设置</VkButton>
+          <VkButton color="green" plain iconName="radix-icons:gear">{{ t('app.settings') }}</VkButton>
         </router-link>
       </div>
     </div>
@@ -21,11 +21,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { initProviders } from './db'
 import { useConversationStore } from './stores/conversation'
 import ConversationList from './components/ConversationList.vue'
 import VkButton from './components/Button.vue'
 
+let { t } = useI18n()
 let conversationStore = useConversationStore()
 
 const items = computed(() => conversationStore.items)

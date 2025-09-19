@@ -12,25 +12,28 @@
         :class="['mr-2', disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 cursor-pointer hover:text-gray-600']"
         @click="triggerFileInput"
       />
-      <input v-model="model" type="text" placeholder="询问任何问题" class="outline-none border-0 flex-1 bg-white focus:ring-0" :disabled="disabled" />
-      <VkButton color="green" iconName="radix-icons:paper-plane" @click="onCreate" :disabled="disabled">发送</VkButton>
+      <input v-model="model" type="text" :placeholder="t('conversation.newMessage')" class="outline-none border-0 flex-1 bg-white focus:ring-0" :disabled="disabled" />
+      <VkButton color="green" iconName="radix-icons:paper-plane" @click="onCreate" :disabled="disabled">{{ t('conversation.send') }}</VkButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import VkButton from '../components/Button.vue'
+
+let { t } = useI18n()
 
 let props = defineProps<{
   disabled?: boolean
   updateImgHide?: boolean
 }>()
-
 let emit = defineEmits<{
   create: [value: string, imagePath?: string | null]
 }>()
+
 let model = defineModel<string>()
 let imagePreview = ref<string | null>(null)
 let selectedImagePath = ref<string | null>(null)

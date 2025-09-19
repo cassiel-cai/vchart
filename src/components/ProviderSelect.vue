@@ -2,7 +2,7 @@
   <div class="provider-select w-full">
     <SelectRoot v-model="currentModel">
       <SelectTrigger class="flex w-full items-center justify-between rounded-md py-1.5 px-3 shadow-sm border outline-none data-[placeholder]:text-gray-400">
-        <SelectValue placeholder="Select a provider..." />
+        <SelectValue :placeholder="$t('provider.selectProvider')" />
         <Icon icon="radix-icons:chevron-down" class="h-5 w-5" />
       </SelectTrigger>
 
@@ -37,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import {
   SelectContent,
   SelectGroup,
@@ -57,6 +58,8 @@ import { ProviderProps } from '../types'
 defineProps<{
   providers: ProviderProps[]
 }>()
+
+let { t } = useI18n()
 
 let currentModel = defineModel<string>()
 </script>
