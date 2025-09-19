@@ -97,7 +97,6 @@ import { updateAppLocale } from '../i18n/locale'
 import {
   SelectContent,
   SelectItem,
-  SelectItemIndicator,
   SelectItemText,
   SelectPortal,
   SelectRoot,
