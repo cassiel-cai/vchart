@@ -125,7 +125,7 @@
                 </div>
 
                 <div class="pt-2">
-                  <div class="text-xs text-gray-500 mb-1">可用模型</div>
+                  <div class="text-xs text-gray-500 mb-1">{{ $t('provider.AMTitle') }}</div>
                   <div class="flex flex-wrap gap-2">
                     <span v-for="model in provider.models" :key="model" class="inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 text-xs">{{ model }}</span>
                   </div>

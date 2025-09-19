@@ -24,7 +24,6 @@
   },
   "provider": {
     "selectProvider": "Please select an AI model provider...",
-    "openai": "OpenAI",
-    "qianfan": "Baidu Qianfan"
+    "AMTitle": "Available Models"
   }
 }
