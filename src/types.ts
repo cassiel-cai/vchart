@@ -67,3 +67,13 @@ export interface BaiduChunkProps {
   is_end: boolean
   result: string
 }
+
+export interface AppConfig {
+  language: 'zh' | 'en'
+  fongSize: number
+}
+
+export const DFFAULT_CONFIG: AppConfig = {
+  language: 'zh',
+  fongSize: 14,
+}

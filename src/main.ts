@@ -7,6 +7,7 @@ import url from 'url' // 导入url
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { createProvider } from './providers/createProvider' // 导入 createProvider
+import { configManager } from './config' // 导入 configManager
 // import { lookup } from 'mime-types' // 导入 lookup
 
 // 处理Windows上的快捷方式创建/删除
@@ -16,6 +17,8 @@ if (started) {
 
 // 创建浏览器窗口
 const createWindow = async () => {
+  await configManager.load() // 加载配置
+
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: 1024, // 窗口宽度
@@ -85,6 +88,14 @@ const createWindow = async () => {
       }
       mainWindow.webContents.send('update-message', content)
     }
+  })
+
+  ipcMain.handle('get-config', async event => {
+    return configManager.get()
+  })
+
+  ipcMain.handle('update-config', async (event, newConfig) => {
+    return await configManager.update(newConfig)
   })
 
   // 加载应用的index.html
