@@ -12,7 +12,7 @@
         :class="['mr-2', disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 cursor-pointer hover:text-gray-600']"
         @click="triggerFileInput"
       />
-      <input v-model="model" type="text" :placeholder="t('conversation.newMessage')" class="outline-none border-0 flex-1 bg-white focus:ring-0" :disabled="disabled" />
+      <input v-model="model" type="text" :placeholder="t('conversation.newMessage')" class="outline-none border-0 flex-1 bg-white focus:ring-0" :disabled="disabled" @keydown.enter="onCreate" />
       <VkButton color="green" iconName="radix-icons:paper-plane" @click="onCreate" :disabled="disabled">{{ t('conversation.send') }}</VkButton>
     </div>
   </div>
