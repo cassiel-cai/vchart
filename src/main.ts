@@ -17,7 +17,8 @@ if (started) {
 
 // 创建浏览器窗口
 const createWindow = async () => {
-  await configManager.load() // 加载配置
+  const config = await configManager.load() // 加载配置
+  console.log('config', config)
 
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
@@ -91,7 +92,8 @@ const createWindow = async () => {
   })
 
   ipcMain.handle('get-config', async event => {
-    return configManager.get()
+    const config = configManager.get()
+    return config
   })
 
   ipcMain.handle('update-config', async (event, newConfig) => {

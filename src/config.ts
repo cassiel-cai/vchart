@@ -9,15 +9,18 @@ let config = { ...DFFAULT_CONFIG }
 export const configManager = {
   async load() {
     try {
-      const data = await fs.readFile(configPath, 'utf-8' as any)
-      config = { ...DFFAULT_CONFIG, ...JSON.parse(data as any) }
-    } catch {
+      const data = await fs.promises.readFile(configPath, 'utf-8')
+      const parsedData = JSON.parse(data)
+      config = { ...DFFAULT_CONFIG, ...parsedData }
+    } catch (error) {
       await this.save()
     }
+
+    return config
   },
 
   async save() {
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf-8' as any)
+    await fs.promises.writeFile(configPath, JSON.stringify(config, null, 2), 'utf-8')
     return config
   },
 
