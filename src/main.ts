@@ -4,12 +4,15 @@ import started from 'electron-squirrel-startup' // 导入electron-squirrel-start
 import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
-import util from 'util' // 导入util
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { createProvider } from './providers/createProvider' // 导入 createProvider
 import { configManager } from './config' // 导入 configManager
+import { setupMenu } from './menu'
 // import { lookup } from 'mime-types' // 导入 lookup
+
+// 设置应用名称
+app.setName('VChat')
 
 // 处理Windows上的快捷方式创建/删除
 if (started) {
@@ -28,6 +31,10 @@ const createWindow = async () => {
       preload: path.join(__dirname, 'preload.js'), // 预加载脚本
     },
   })
+
+  // 设置应用菜单（基于当前语言）
+  const currentConfig = configManager.get()
+  setupMenu(mainWindow, currentConfig.language)
 
   protocol.handle('safe-file', async request => {
     const filePath = decodeURIComponent(request.url.slice('safe-file://'.length)) // decodeURIComponent 解码URL中的特殊字符
@@ -109,7 +116,10 @@ const createWindow = async () => {
   })
 
   ipcMain.handle('update-config', async (event, newConfig) => {
-    return await configManager.update(newConfig)
+    const updated = await configManager.update(newConfig)
+    // 配置更新后，依据语言重建菜单
+    setupMenu(mainWindow, updated.language)
+    return updated
   })
 
   // 加载应用的index.html

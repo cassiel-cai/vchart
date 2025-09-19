@@ -36,5 +36,6 @@ const pinia = createPinia() // 创建 pinia
 // 在挂载应用前，先读取持久化配置并设置语言，避免刷新后回退到默认语言
 ;(async () => {
   await initAppLocale()
+
   createApp(App).use(router).use(pinia).use(i18n).mount('#app') // 挂载 App.vue 到 #app 并使用 router、pinia 和 i18n
 })()

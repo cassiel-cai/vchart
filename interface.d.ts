@@ -13,6 +13,10 @@ export interface IElectronAPI {
   copyImageToUserDir: (sourcePath: string) => Promise<string | null> // 声明 copyImageToUserDir 方法
   getConfig: () => Promise<AppConfig> // 声明 getConfig 方法
   updateConfig: (config: Partial<AppConfig>) => Promise<AppConfig> // 声明 updateConfig 方法
+
+  // 菜单事件监听
+  onMenuNewConversation: (callback: () => void) => any
+  onMenuOpenSettings: (callback: () => void) => any
 } // 声明 ElectronAPI 类型
 
 declare global {

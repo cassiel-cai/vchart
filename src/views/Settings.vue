@@ -171,7 +171,7 @@ import { useProviderStore } from '../stores/provider'
 import { providerConfigs } from '../config/providerConfig'
 
 let { locale } = useI18n()
-let activeTab = ref<'general' | 'models'>('models')
+let activeTab = ref<'general' | 'models'>('general')
 let currentConfig = reactive<AppConfig>({
   language: 'zh',
   fongSize: 14,
