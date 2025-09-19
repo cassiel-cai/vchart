@@ -40,7 +40,26 @@ export const openaiConfig: ProviderConfigItem[] = [
   {
     key: 'baseUrl',
     label: 'Base URL',
-    value: 'https://api.openai.com/v1',
+    value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    type: 'text',
+    required: false,
+    placeholder: 'Base URL',
+  },
+]
+
+export const deepseekConfig: ProviderConfigItem[] = [
+  {
+    key: 'apiKey',
+    label: 'API Key',
+    value: '',
+    type: 'password',
+    required: true,
+    placeholder: 'API Key',
+  },
+  {
+    key: 'baseUrl',
+    label: 'Base URL',
+    value: 'https://api.deepseek.com/v1',
     type: 'text',
     required: false,
     placeholder: 'Base URL',
@@ -51,5 +70,5 @@ export const openaiConfig: ProviderConfigItem[] = [
 export const providerConfigs: Record<string, ProviderConfigItem[]> = {
   qianfan: qianfanConfig,
   dashscope: openaiConfig,
-  deepseek: openaiConfig,
+  deepseek: deepseekConfig,
 }

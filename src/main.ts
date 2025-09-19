@@ -18,8 +18,7 @@ if (started) {
 
 // 创建浏览器窗口
 const createWindow = async () => {
-  const config = await configManager.load() // 加载配置
-  console.log('config', util.inspect(config, { depth: null, colors: true }))
+  await configManager.load()
 
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
@@ -80,15 +79,27 @@ const createWindow = async () => {
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     const { providerName, selectedModel, messages, messageId } = data
 
-    const provider = createProvider(providerName)
-    const stream = await provider.chat(messages, selectedModel)
+    try {
+      const provider = createProvider(providerName)
+      const stream = await provider.chat(messages, selectedModel)
 
-    for await (const chunk of stream) {
-      const content = {
-        messageId,
-        data: chunk,
+      for await (const chunk of stream) {
+        const content = {
+          messageId,
+          data: chunk,
+        }
+        mainWindow.webContents.send('update-message', content)
       }
-      mainWindow.webContents.send('update-message', content)
+    } catch (error) {
+      const errorContent = {
+        messageId,
+        data: {
+          is_end: true,
+          is_error: true,
+          result: error instanceof Error ? error.message : '与 AI 服务通信时发生错误',
+        },
+      }
+      mainWindow.webContents.send('update-message', errorContent)
     }
   })
 

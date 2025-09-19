@@ -35,7 +35,7 @@ const conversation = computed(() => conversationStore.getConversationById(conver
 const filteredMessages = computed(() => messageStore.items)
 const sendedMessages = computed(() =>
   filteredMessages.value
-    .filter(message => message.status !== 'loading')
+    .filter(message => message.status !== 'loading' && message.status !== 'error')
     .map(message => {
       return {
         role: message.type === 'question' ? 'user' : 'assistant',
@@ -142,9 +142,20 @@ onMounted(async () => {
   window.electronAPI.onUpdateMessage(async (streamData: UpdatgedStreamData) => {
     const { messageId, data } = streamData
     streamContent += data.result
+
+    const getMessageStatus = (data: any): MessageStatus => {
+      if (data.is_error) {
+        return 'error'
+      } else if (data.is_end) {
+        return 'finished'
+      } else {
+        return 'streaming'
+      }
+    }
+
     const updatedDate = {
       content: streamContent,
-      status: data.is_end ? ('finished' as MessageStatus) : ('streaming' as MessageStatus),
+      status: getMessageStatus(data),
       updatedAt: new Date().toISOString(),
     }
 

@@ -1,15 +1,27 @@
 import { BaseProvider } from './BaseProvider'
 import { QianfanProvider } from './QianfanProvider'
 import { OpenAlProvider } from './OpenAlProvider'
+import { configManager } from '../config'
 
 export function createProvider(providerName: string): BaseProvider {
+  const config = configManager.get()
+  const providerSettings = config.providerSettings?.[providerName] || {}
   switch (providerName) {
     case 'qianfan':
-      return new QianfanProvider(process.env['QIANFAN_ACCESS_KEY'] as string, process.env['QIANFAN_SECRET_KEY'] as string)
+      if (!providerSettings.accessKey || !providerSettings.secretKey) {
+        throw new Error('缺少千帆 API 配置： 请在设置中配置 accessKey 和 secretKey')
+      }
+      return new QianfanProvider(providerSettings.accessKey, providerSettings.secretKey)
     case 'dashscope':
-      return new OpenAlProvider(process.env['ALI_API_KEY'] as string, 'https://dashscope.aliyuncs.com/compatible-mode/v1')
+      if (!providerSettings.apiKey || !providerSettings.baseUrl) {
+        throw new Error('缺少通义千问 API 配置： 请在设置中配置 apiKey 和 baseUrl')
+      }
+      return new OpenAlProvider(providerSettings.apiKey, providerSettings.baseUrl)
     case 'deepseek':
-      return new OpenAlProvider(process.env['DEEPSEEK_API_KEY'] as string, 'https://api.deepseek.com/v1')
+      if (!providerSettings.apiKey || !providerSettings.baseUrl) {
+        throw new Error('缺少DeepSeek API 配置： 请在设置中配置 apiKey 和 baseUrl')
+      }
+      return new OpenAlProvider(providerSettings.apiKey, providerSettings.baseUrl)
     default:
       throw new Error(`Unsupported provider: ${providerName}`)
   }

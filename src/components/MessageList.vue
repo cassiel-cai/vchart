@@ -10,9 +10,12 @@
             <img v-if="message.imagePath" :src="`safe-file://${message.imagePath}`" alt="Message Image" class="w-24 h-24 object-cover rounded block mb-1" />
             {{ message.content }}
           </div>
-          <div v-else class="message-answer bg-gray-200 text-gray-700 p-2 rounded-md">
+          <div v-else class="message-answer p-2 rounded-md" :class="{ 'bg-red-100 text-red-700': message.status === 'error', 'bg-gray-200 text-gray-700': message.status !== 'error' }">
             <template v-if="message.status === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
+            </template>
+            <template v-else-if="message.status === 'error'">
+              <span>{{ message.content }}</span>
             </template>
             <div v-else class="prose prose-slate prose-headings:my-2 prose-p:my-1 prose-ol:my-0 prose-ul:my-1 prose-li:my-0 prose-hr:my-0 prose-pre:mb-0 prose-pre:p-0 prose-blockquote:m-0">
               <VueMarkdown :source="message.content" :plugins="plugins" />

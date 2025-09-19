@@ -116,8 +116,8 @@
                       <input
                         :type="item.type === 'password' ? 'password' : item.type === 'number' ? 'number' : 'text'"
                         class="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 text-sm"
-                        v-model="currentConfig.providerSettings![String(provider.id)][item.key]"
-                        @blur="saveProviderSettings(String(provider.id))"
+                        v-model="currentConfig.providerSettings![provider.name][item.key]"
+                        @blur="saveProviderSettings(provider.name)"
                         :placeholder="item.placeholder || ''"
                       />
                     </div>
@@ -204,7 +204,7 @@ const providers = computed(() => providerStore.items)
 
 const initProviderFormValues = () => {
   providers.value.forEach(p => {
-    const pid = String(p.id)
+    const pid = p.name
     if (!currentConfig.providerSettings![pid]) currentConfig.providerSettings![pid] = {}
     const items = providerConfigs[p.name] || []
     items.forEach(it => {
@@ -215,7 +215,7 @@ const initProviderFormValues = () => {
   })
 }
 
-const saveProviderSettings = async (providerId: string) => {
+const saveProviderSettings = async (_providerName: string) => {
   // 将响应式对象转换为可序列化的纯对象，避免 IPC 克隆失败
   const plain = JSON.parse(JSON.stringify(toRaw(currentConfig.providerSettings)))
   await window.electronAPI.updateConfig({ providerSettings: plain })
