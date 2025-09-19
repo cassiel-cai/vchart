@@ -1,19 +1,19 @@
 <template>
-  <div class="p-6 max-w-1xl mx-auto">
+  <div class="p-4 max-w-1xl mx-auto">
     <div class="mb-4 flex items-center">
-      <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">应用设置</h1>
-      <p class="text-sm text-gray-600 dark:text-gray-400">（自定义您的应用偏好设置）</p>
+      <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $t('settings.title') }}</h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400">（{{ $t('settings.subtitle') }}）</p>
     </div>
 
     <div class="flex-1 flex flex-col">
       <!-- 语言设置 -->
       <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-2 mb-4">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">语言设置</h2>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{{ $t('settings.language.title') }}</h2>
         <SelectRoot v-model="currentConfig.language">
           <SelectTrigger
             class="inline-flex items-center justify-between rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm ring-offset-white dark:ring-offset-gray-900 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[176px]"
           >
-            <SelectValue placeholder="选择语言" />
+            <SelectValue :placeholder="$t('settings.language.title')" />
             <svg class="h-4 w-4 opacity-50">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                 <path
@@ -34,38 +34,14 @@
                   value="zh"
                   class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-900 dark:focus:text-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                 >
-                  <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                    <SelectItemIndicator>
-                      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                        <path
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </SelectItemIndicator>
-                  </span>
-                  <SelectItemText>简体中文</SelectItemText>
+                  <SelectItemText>{{ $t('settings.language.chinese') }}</SelectItemText>
                 </SelectItem>
 
                 <SelectItem
                   value="en"
                   class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-900 dark:focus:text-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                 >
-                  <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                    <SelectItemIndicator>
-                      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                        <path
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </SelectItemIndicator>
-                  </span>
-                  <SelectItemText>English</SelectItemText>
+                  <SelectItemText>{{ $t('settings.language.english') }}</SelectItemText>
                 </SelectItem>
               </SelectViewport>
             </SelectContent>
@@ -76,13 +52,13 @@
       <!-- 文字大小设置 -->
       <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-2 mb-4">
         <div class="flex items-center mb-2">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">文字大小</h2>
-          <p class="text-xs text-gray-500 dark:text-gray-400">（范围：14～24 像素/单位）</p>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('settings.fontSize.title') }}</h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400">（{{ $t('settings.fontSize.subtitle') }}）</p>
         </div>
 
         <div class="flex items-center">
           <NumberFieldRoot v-model="currentConfig.fongSize" :min="14" :max="24" class="flex items-center">
-            <label class="sr-only">文字大小</label>
+            <label class="sr-only">{{ $t('settings.fontSize.title') }}</label>
 
             <!-- 减少按钮 -->
             <NumberFieldDecrement
@@ -116,6 +92,8 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, toRaw, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { updateAppLocale } from '../i18n/locale'
 import {
   SelectContent,
   SelectItem,
@@ -133,6 +111,8 @@ import {
 } from 'radix-vue'
 import type { AppConfig } from '../types'
 
+const { locale } = useI18n()
+
 let currentConfig = reactive<AppConfig>({
   language: 'zh',
   fongSize: 14,
@@ -146,6 +126,10 @@ onMounted(async () => {
 watch(
   currentConfig,
   async newVal => {
+    // 同步更新i18n语言并持久化
+    if (newVal.language !== locale.value) {
+      await updateAppLocale(newVal.language)
+    }
     await window.electronAPI.updateConfig(toRaw(newVal))
   },
   { deep: true }

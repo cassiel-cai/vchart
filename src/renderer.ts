@@ -7,6 +7,8 @@ import App from './App.vue' // 导入 App.vue
 import Home from './views/Home.vue' // 导入 Home.vue
 import Conversation from './views/Conversation.vue' // 导入 Conversation.vue
 import Settings from './views/Settings.vue' // 导入 Settings.vue
+import i18n from './i18n' // 导入 i18n
+import { initAppLocale } from './i18n/locale'
 import './index.css' // 导入 index.css
 import 'highlight.js/styles/github-dark.css' // 导入 highlight.js 的 github-dark 样式
 
@@ -30,4 +32,9 @@ router.beforeEach(to => {
 }) // 在路由跳转前设置 selectedId
 
 const pinia = createPinia() // 创建 pinia
-createApp(App).use(router).use(pinia).mount('#app') // 挂载 App.vue 到 #app 并使用 router 和 pinia
+
+// 在挂载应用前，先读取持久化配置并设置语言，避免刷新后回退到默认语言
+;(async () => {
+  await initAppLocale()
+  createApp(App).use(router).use(pinia).use(i18n).mount('#app') // 挂载 App.vue 到 #app 并使用 router、pinia 和 i18n
+})()

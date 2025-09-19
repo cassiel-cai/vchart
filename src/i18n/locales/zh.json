@@ -1,0 +1,42 @@
+{
+  "common": {
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功"
+  },
+  "app": {
+    "title": "vChat",
+    "settings": "应用设置",
+    "conversations": "对话",
+    "newChat": "新聊天"
+  },
+  "settings": {
+    "title": "应用设置",
+    "subtitle": "自定义您的应用偏好设置",
+    "language": {
+      "title": "语言设置",
+      "chinese": "简体中文",
+      "english": "English"
+    },
+    "fontSize": {
+      "title": "文字大小",
+      "subtitle": "范围：14～24 像素/单位"
+    }
+  },
+  "conversation": {
+    "newMessage": "询问任何问题...",
+    "send": "发送"
+  },
+  "provider": {
+    "selectProvider": "请选择 AI 模型提供商...",
+    "openai": "OpenAI",
+    "qianfan": "百度千帆"
+  }
+}
