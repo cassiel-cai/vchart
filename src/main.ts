@@ -4,6 +4,7 @@ import started from 'electron-squirrel-startup' // 导入electron-squirrel-start
 import path from 'node:path' // 导入path
 import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
+import util from 'util' // 导入util
 import 'dotenv/config' // 导入dotenv
 import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
 import { createProvider } from './providers/createProvider' // 导入 createProvider
@@ -18,7 +19,7 @@ if (started) {
 // 创建浏览器窗口
 const createWindow = async () => {
   const config = await configManager.load() // 加载配置
-  console.log('config', config)
+  console.log('config', util.inspect(config, { depth: null, colors: true }))
 
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({

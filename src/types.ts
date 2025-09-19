@@ -71,9 +71,11 @@ export interface BaiduChunkProps {
 export interface AppConfig {
   language: 'zh' | 'en'
   fongSize: number
+  providerSettings?: Record<string, Record<string, string>>
 }
 
 export const DFFAULT_CONFIG: AppConfig = {
   language: 'zh',
   fongSize: 14,
+  providerSettings: {},
 }

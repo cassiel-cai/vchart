@@ -87,7 +87,7 @@
       </TabsContent>
 
       <TabsContent value="models">
-        <AccordionRoot type="multiple" class="space-y-2">
+        <AccordionRoot type="single" v-model="openedProvider" collapsible class="space-y-2">
           <template v-for="provider in providers" :key="provider.id">
             <AccordionItem :value="String(provider.id)" class="border rounded-md">
               <AccordionHeader>
@@ -96,22 +96,32 @@
                     <img :src="provider.avatar" :alt="provider.title || provider.name" class="w-5 h-5 rounded" />
                     <span class="font-medium">{{ provider.title || provider.name }}</span>
                   </div>
+                  <svg class="w-4 h-4 opacity-60">
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                      <path
+                        d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </svg>
                 </AccordionTrigger>
               </AccordionHeader>
               <AccordionContent class="px-4 py-3 space-y-3 border-t">
                 <div class="grid grid-cols-1 gap-3">
-                  <div class="flex flex-col gap-1">
-                    <label class="text-xs text-gray-500">Access Key</label>
-                    <input class="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 text-sm" placeholder="abcd" />
-                  </div>
-                  <div class="flex flex-col gap-1">
-                    <label class="text-xs text-gray-500">Secret Key</label>
-                    <input class="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 text-sm" placeholder="abcd" />
-                  </div>
-                  <div class="flex flex-col gap-1">
-                    <label class="text-xs text-gray-500">BaseUrl</label>
-                    <input class="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 text-sm" placeholder="abcd" />
-                  </div>
+                  <template v-for="item in providerConfigs[provider.name] || []" :key="item.key">
+                    <div class="flex flex-col gap-1">
+                      <label class="text-xs text-gray-500">{{ item.label }}</label>
+                      <input
+                        :type="item.type === 'password' ? 'password' : item.type === 'number' ? 'number' : 'text'"
+                        class="h-9 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 text-sm"
+                        v-model="currentConfig.providerSettings![String(provider.id)][item.key]"
+                        @blur="saveProviderSettings(String(provider.id))"
+                        :placeholder="item.placeholder || ''"
+                      />
+                    </div>
+                  </template>
                 </div>
 
                 <div class="pt-2">
@@ -158,21 +168,24 @@ import {
 } from 'radix-vue'
 import type { AppConfig } from '../types'
 import { useProviderStore } from '../stores/provider'
+import { providerConfigs } from '../config/providerConfig'
 
-const { locale } = useI18n()
-const activeTab = ref<'general' | 'models'>('models')
-const providerStore = useProviderStore()
-const providers = computed(() => providerStore.items)
-
+let { locale } = useI18n()
+let activeTab = ref<'general' | 'models'>('models')
 let currentConfig = reactive<AppConfig>({
   language: 'zh',
   fongSize: 14,
 })
+let openedProvider = ref<string | undefined>(undefined)
+let providerStore = useProviderStore()
 
 onMounted(async () => {
   const config = await window.electronAPI.getConfig()
   Object.assign(currentConfig, config)
   providerStore.fetchProviders()
+  // 初始化容器
+  if (!currentConfig.providerSettings) currentConfig.providerSettings = {}
+  setTimeout(() => initProviderFormValues(), 0)
 })
 
 watch(
@@ -186,6 +199,27 @@ watch(
   },
   { deep: true }
 )
+
+const providers = computed(() => providerStore.items)
+
+const initProviderFormValues = () => {
+  providers.value.forEach(p => {
+    const pid = String(p.id)
+    if (!currentConfig.providerSettings![pid]) currentConfig.providerSettings![pid] = {}
+    const items = providerConfigs[p.name] || []
+    items.forEach(it => {
+      if (currentConfig.providerSettings![pid][it.key] === undefined) {
+        currentConfig.providerSettings![pid][it.key] = (it.value as string) || ''
+      }
+    })
+  })
+}
+
+const saveProviderSettings = async (providerId: string) => {
+  // 将响应式对象转换为可序列化的纯对象，避免 IPC 克隆失败
+  const plain = JSON.parse(JSON.stringify(toRaw(currentConfig.providerSettings)))
+  await window.electronAPI.updateConfig({ providerSettings: plain })
+}
 </script>
 
 <style scoped></style>
