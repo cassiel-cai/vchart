@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@baiducloud/qianfan": "^0.2.3",
+    "@electron/asar": "^4.0.1",
     "@types/mime-types": "^3.0.1",
     "dayjs": "^1.11.18",
     "dexie": "^4.2.0",

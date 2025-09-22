@@ -386,4 +386,14 @@ npm install markdown-it-highlightjs --save
 # - app.asar 打包后的源代码
 # - locales/ 语言文件
 # - LICENSE 许可证文件
+
+# 26. 探究生成的 asar 文件格式
+# 26-1. 安装
+npm install --engine-strict @electron/asar
+# 26-2．解压 asar 文件
+asar extract app.asar 目标文件夹
+# 26-3.查看 asar內容（不解压）
+asar list app-asar
+# 26-4．解压单个文件
+asar extract-file app.asar package.json
 ```
