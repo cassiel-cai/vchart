@@ -396,4 +396,40 @@ asar extract app.asar 目标文件夹
 asar list app-asar
 # 26-4．解压单个文件
 asar extract-file app.asar package.json
+
+# 27. 使用 makers 生成安装包
+# DMG MacOS格式安装依赖：
+npm install --save-dev @electron-forge/maker-dmg
+# forge.config.ts 引入 import { MakerDMG } from '@electron-forge/maker-dmg'
+# new MakerDMG({
+#   icon: './src/asstes/icon.icns', // 应用图标
+#   format: 'ULFO', // 格式
+# }),
+
+# 28. 快速制作图标的网站 https://ray.so/icon
+
+# 29. 转换文件格式的网站 https://cloudconvert.com/png-to-icns
+
+# 30. 关于代码签名
+# 30-1. 代码签名配置
+# osxSign: {
+#   identity:'Developer ID Application: Your Name（TEAM_ID）', // 开发者证书
+#   'hardened-runtime':true, // 启用强化运行时
+#   entitlements: 'entitlements.plist',
+#   'entitlements-inherit': 'entitlements.plist'
+#   'signature-flags': 'library'
+# },
+# 30-2. 公证配置
+# osxNotarize{
+#   tool:'notarytool', // 使用新的公证工具
+#   appleId: process.env. APPLE_ID,
+#   appleIdPassword: process.env.APPLE_PASSWORD, // App-specific password
+#   teamId: process.env. APPLE_TEAM_ID
+# }
+# 30-3. Windows 代码签名配置
+# win32sign: {
+# certificateFile: './cert.pfx'
+# certificatePassword: process. env.WINDOWS_CERT_PASSWORD,
+# timeStampServer： ‘http://timestamp.digicert.com‘, // 时间戳服务器
+# signwithParams: '/fd sha256 /tr http://timestamp.digicert.com /td sha256' // 签名算法
 ```
