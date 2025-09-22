@@ -9,8 +9,8 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses'; // 导入 FuseV1Op
 
 const config: ForgeConfig = {
   packagerConfig: {
-    
-    asar: true,
+    name: 'VChat', // 应用名称
+    asar: true, // 启用 ASAR 打包
   }, // 打包配置
   rebuildConfig: {}, // 重新构建配置
   makers: [

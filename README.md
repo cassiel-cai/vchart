@@ -358,7 +358,7 @@ npm install markdown-it-highlightjs --save
 # - 创建快捷方式
 # - 注册文件关联
 # - 添加卸载信息
-# 25-2: 适用场景对比
+# 25-2. 适用场景对比
 # 可执行程序适合：
 # - 测试版本
 # - 便携版
@@ -367,4 +367,23 @@ npm install markdown-it-highlightjs --save
 # - 正式发布
 # - 面向普通用户
 # - 需要系统集成的场景
+# 25-3. 命名规则:［应用名］-［平台］-［架构］
+# 25-4. app 文件结构
+# Contents/
+# - Frameworks 应用依赖的框
+# - Info.plist 应用的配置信息
+# - MacOS 可执行文件目录
+# - Pkglnfo 应用类型和创建者代码
+# - Resources 资源文件目录(最重要的)
+# - CodeSignature 代码签名相关文件
+# Resources/
+# - app.asar 打包后的应用代码
+# - electron.icns 应用图标
+# - /proj/ 各种语言资源
+# 25-5. windows 的基本文件结构
+# - vchat.exe 主程序
+# - resources/ 资源文件夹
+# - app.asar 打包后的源代码
+# - locales/ 语言文件
+# - LICENSE 许可证文件
 ```
