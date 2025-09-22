@@ -1,15 +1,14 @@
 /*主进程文件*/
-import { app, BrowserWindow, ipcMain, dialog, nativeImage, protocol, net, Menu } from 'electron' // 导入app和BrowserWindow
+import { app, BrowserWindow, protocol, net } from 'electron' // 导入app和BrowserWindow
 import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
 import path from 'node:path' // 导入path
-import fs from 'fs/promises' // 导入fs
+// import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
-import util from 'util' // 导入util
+// import util from 'util' // 导入util
 import 'dotenv/config' // 导入dotenv
-import { CreateChatProps } from './types' // 导入 CreateChatProps 类型
-import { createProvider } from './providers/createProvider' // 导入 createProvider
 import { configManager } from './config' // 导入 configManager
 import { setupMenu } from './menu'
+import { registerIpcHandlers } from './ipc'
 // import { lookup } from 'mime-types' // 导入 lookup
 
 // 设置应用名称
@@ -37,40 +36,8 @@ const createWindow = async () => {
   const currentConfig = configManager.get()
   setupMenu(mainWindow, currentConfig.language)
 
-  // 会话列表右键菜单：仅显示“删除对话”，支持国际化，并在点击后弹出确认
-  ipcMain.handle('show-conversation-context-menu', async (event, conversationId?: number) => {
-    const win = BrowserWindow.fromWebContents(event.sender)
-    if (!win) return
-    const lang = configManager.get().language
-    const label = lang === 'zh' ? '删除对话' : 'Delete Conversation'
-    const confirmTitle = lang === 'zh' ? '确认删除' : 'Confirm Deletion'
-    const message = lang === 'zh' ? '确定要删除该对话及其所有消息吗？' : 'Are you sure you want to delete this conversation and all its messages?'
-    const detail = lang === 'zh' ? '此操作不可撤销。' : 'This action cannot be undone.'
-    const btnDelete = lang === 'zh' ? '删除' : 'Delete'
-    const btnCancel = lang === 'zh' ? '取消' : 'Cancel'
-
-    const menu = Menu.buildFromTemplate([
-      {
-        label,
-        click: async () => {
-          const res = await dialog.showMessageBox(win, {
-            type: 'none', // 移除图标，仅显示文字
-            title: confirmTitle,
-            message,
-            detail, // 将说明拆分为 detail，有助于在 macOS 上拉宽弹窗
-            buttons: [btnDelete, btnCancel],
-            defaultId: 1,
-            cancelId: 1,
-            noLink: true,
-          })
-          if (res.response === 0) {
-            win.webContents.send('conversation:delete', conversationId)
-          }
-        },
-      },
-    ])
-    menu.popup({ window: win })
-  })
+  // 注册所有 IPC 事件
+  registerIpcHandlers(mainWindow)
 
   protocol.handle('safe-file', async request => {
     const filePath = decodeURIComponent(request.url.slice('safe-file://'.length)) // decodeURIComponent 解码URL中的特殊字符
@@ -87,76 +54,7 @@ const createWindow = async () => {
     return net.fetch(newFilePath) // 返回文件数据
   }) // 处理 safe-file 协议
 
-  ipcMain.handle('select-image', async () => {
-    const result = await dialog.showOpenDialog(mainWindow, {
-      properties: ['openFile'], // 打开文件对话框
-      filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'] }], // 过滤图片文件
-    }) // 显示打开文件对话框
-
-    if (result.canceled || result.filePaths.length === 0) return null // 判断是否取消或没有选择图片
-
-    const filePath = result.filePaths[0] // 获取图片路径
-    const fileName = path.basename(filePath) // 文件名
-    const format = path.extname(filePath).slice(1).toLowerCase() // 扩展名(不带点)
-    const size = (await fs.stat(filePath)).size // 文件大小(字节)
-    const image = nativeImage.createFromPath(filePath) // 创建图片
-    const dataURL = image.isEmpty() ? '' : image.toDataURL() // 获取图片数据URL
-
-    return { path: filePath, name: fileName, format, size, dataURL } // 返回图片详细信息
-  })
-
-  ipcMain.handle('copy-image-to-user-dir', async (event, sourcePath: string) => {
-    const userDataPath = app.getPath('userData') // 获取用户数据目录
-    const imageDir = path.join(userDataPath, 'images') // 获取图片目录
-
-    await fs.mkdir(imageDir, { recursive: true }) // 创建图片目录
-
-    const fileName = path.basename(sourcePath)
-    const destPath = path.join(imageDir, fileName)
-
-    await fs.copyFile(sourcePath, destPath)
-
-    return destPath
-  })
-
-  ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
-    const { providerName, selectedModel, messages, messageId } = data
-
-    try {
-      const provider = createProvider(providerName)
-      const stream = await provider.chat(messages, selectedModel)
-
-      for await (const chunk of stream) {
-        const content = {
-          messageId,
-          data: chunk,
-        }
-        mainWindow.webContents.send('update-message', content)
-      }
-    } catch (error) {
-      const errorContent = {
-        messageId,
-        data: {
-          is_end: true,
-          is_error: true,
-          result: error instanceof Error ? error.message : '与 AI 服务通信时发生错误',
-        },
-      }
-      mainWindow.webContents.send('update-message', errorContent)
-    }
-  })
-
-  ipcMain.handle('get-config', async event => {
-    const config = configManager.get()
-    return config
-  })
-
-  ipcMain.handle('update-config', async (event, newConfig) => {
-    const updated = await configManager.update(newConfig)
-    // 配置更新后，依据语言重建菜单
-    setupMenu(mainWindow, updated.language)
-    return updated
-  })
+  // 其余非 IPC 逻辑保留在主进程（例如自定义协议）
 
   // 加载应用的index.html
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -168,8 +66,10 @@ const createWindow = async () => {
     )
   }
 
-  // 打开开发者工具
-  mainWindow.webContents.openDevTools()
+  // 仅在开发环境打开开发者工具
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 // 初始化并准备好创建浏览器窗口时，将调用此方法。
