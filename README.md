@@ -432,4 +432,38 @@ npm install --save-dev @electron-forge/maker-dmg
 # certificatePassword: process. env.WINDOWS_CERT_PASSWORD,
 # timeStampServer： ‘http://timestamp.digicert.com‘, // 时间戳服务器
 # signwithParams: '/fd sha256 /tr http://timestamp.digicert.com /td sha256' // 签名算法
+
+# 31. 简介 publish 的概念和优点
+# 31-1. 应用发布 - 为什么要 publish？
+# 分发应用程序
+# - 用户需要下载和安装您的应用
+# - 需要一个可靠的地方存放安装包
+# - 用户需要知道在哪里下载
+# 版本更新
+# - 当您的应用有新功能或修复 BUG 时
+# - 用户需要获取最新版本
+# - 需要一个可靠的更新机制
+# 31-2. 如果不使用 publish
+# - 需要手动上传安装包
+# - 用户需要手动下载新版本
+# - 难以管理不同版本
+# - 更新过程繁琐
+# 31-3. 使用 publish
+# - 自动化发布流程
+# - 用户可以自动更新
+# - 版本管理清晰
+# - 提升用户体验
+# 31-4. Electron forge publishers
+# https://www.electronforge.io/config/publishers
+# 多平台发布支持（和 makers 是相同的设计思想，每一个平台是一个单独的依赖包）
+# - GitHub Releases
+# - Amazon S3
+# - Electron Release Server
+# - Snap Store
+# - 自定义发布目标
+# 31-5. GitHub Publisher (@electron-forge/publisher-github) 
+# https://www.electronforge.io/config/publishers/github
+# 自动创建 GitHub Release 
+# 上传构建文件
+# 支持草稿和预发布选项
 ```
