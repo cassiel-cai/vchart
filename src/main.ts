@@ -5,7 +5,6 @@ import path from 'node:path' // 导入path
 // import fs from 'fs/promises' // 导入fs
 import url from 'url' // 导入url
 // import util from 'util' // 导入util
-import 'dotenv/config' // 导入dotenv
 import { configManager } from './config' // 导入 configManager
 import { setupMenu } from './menu'
 import { registerIpcHandlers } from './ipc'
