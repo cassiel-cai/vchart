@@ -7,7 +7,6 @@ import { MakerDMG } from '@electron-forge/maker-dmg' // 导入 MakerDMG
 import { VitePlugin } from '@electron-forge/plugin-vite' // 导入 VitePlugin
 import { FusesPlugin } from '@electron-forge/plugin-fuses' // 导入 FusesPlugin
 import { FuseV1Options, FuseVersion } from '@electron/fuses' // 导入 FuseV1Options 和 FuseVersion
-import { PublisherGithub } from '@electron-forge/publisher-github' // 导入 GitHub 发布器
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -62,16 +61,6 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ], // 插件配置
-  publishers: [
-    new PublisherGithub({
-      repository: {
-        owner: 'ANCESTORLOONG', // 替换为您的 GitHub 用户名
-        name: 'vChat', // 替换为您的仓库名
-      },
-      prerelease: false, // 是否为预发布版本
-      draft: true, // 是否为草稿
-    }),
-  ], // 发布器配置
 }
 
 export default config

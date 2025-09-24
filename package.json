@@ -9,9 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx .",
-    "release": "npm run make && npm run publish",
-    "build:all": "npm run make -- --platform=all"
+    "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
   "author": {
