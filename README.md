@@ -492,6 +492,7 @@ npm install --save-dev @electron-forge/publisher-github
 # 使用命令来发布：
 npm run publish
 # 注意事项：
+# - Github 仓库必须是 Public 公共的
 # - 确保你的Github Token 有足够的权限（至少需要 repo 权限）
 # - 发布会创建一个草稿版本（draft: true）, 你可以在 Github 上检查后再正式发布
 
