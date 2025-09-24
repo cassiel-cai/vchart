@@ -490,6 +490,10 @@ npm install --save-dev @electron-forge/publisher-github
 # （3）将 token 设置为环境变量: GITHUB_TOKEN
 # 在 .env 中添加GITHUB_TOKEN=****************************************
 # 使用命令来发布：
+# 升级补丁号：npm version patch 例：1.0.1 → 1.0.2
+# 升级次版本：npm version minor 例：1.0.1 → 1.1.0
+# 升级主版本：npm version major 例：1.0.1 → 2.0.0
+npm run patch
 npm run publish
 # 注意事项：
 # - Github 仓库必须是 Public 公共的
