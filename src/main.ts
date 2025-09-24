@@ -7,6 +7,7 @@ import 'dotenv/config'
 import { configManager } from './config'
 import { setupMenu } from './menu'
 import { registerIpcHandlers } from './ipc'
+import { updateElectronApp } from 'update-electron-app'
 
 // 设置应用名称
 app.setName('VChat')
@@ -90,6 +91,11 @@ app.on('activate', () => {
     createWindow() // 创建窗口
   }
 })
+
+updateElectronApp({
+  repo: 'Great-Qin-Dynasty/vchart', // GitHub 仓库
+  updateInterval: '1 hour', // 检查更新间隔
+}) // 更新应用
 
 // 在此文件中，您可以包含应用程序的特定主进程代码。您也可以将它们放在单独的文件中，并导入它们。
 // 代码。您也可以将它们放在单独的文件中，并导入它们。

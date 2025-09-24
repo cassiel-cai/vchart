@@ -494,4 +494,62 @@ npm run publish
 # 注意事项：
 # - 确保你的Github Token 有足够的权限（至少需要 repo 权限）
 # - 发布会创建一个草稿版本（draft: true）, 你可以在 Github 上检查后再正式发布
+
+# 33. 完成应用自动更新功能
+# 文档地址: Electron forge
+# https://www.electronforge.io/advanced/auto-update
+# 官方文档:
+# https://www.electronjs.org/docs/latest/tutorial/updates
+# autoUpdater:
+# https://www.electronjs.org/docs/latest/api/auto-updater
+# - autoUpdater 模块由 Electron提供，适用于 macOS 和 Windows 系统 Linux 不支持原生自动更新。
+# - 使用 autoUpdater 的必要条件：
+# Note: Your application must be signed for automatic updates on macOS. This is a requirement of Squirrel.Mac.
+# 33-1. 工作原理：
+# - 应用启动时，通过 autoUpdater 检查服务器上是否有新版本。
+# - 如果有更新，它会下载更新包（通常是完整安装包或增量包）。
+# - 下载完成后，可以提示用户安装并重启应用。
+# 33-2. 使用 update-electron-app
+# https://github.com/electron/update-electron-app
+# 它封装了 Electron 内置的 autoUpdater 模块，提供了一个更高层次的 API，使得开发者无需手动配置更新 URL 或处理复杂的更新逻辑。
+npm i update-electron-app
+# const { updateElectronApp } = require('update-electron-app');
+# updateElectronApp({
+#   repo: 'your-github-username/your-repo-name', // GitHub 仓库
+#   updateInterval：‘1 hour‘，// 检查更新间隔
+# })
+# 33-2. 使用 update.electronjs.org（官方服务）推荐
+# https://github.com/electron/update.electronjs.org
+# - 是一个由 Electron 团队维护的免费、开源的更新服务，本质上是一个服务器端基础设施。
+# - 工作方式:
+# -- 它依赖 GitHub Releases 作为更新分发源.
+# -- 当你的应用发布新版本到 GitHub 时, update.electronjs.org 会生成对应的更新 feed（例如 https://update.electronjs.org/owner/repo/platform/version），供客户端查询。
+# - 适用条件:
+# -- 应用必须是开源的，且托管在公开的 GitHub 仓库。
+# -- 打包格式需符合特定要求（如 MacOS 的 .zip，Windows 的 .exe 和 .nupkg
+# - FeedURL 格式:
+# -- https://update.electronjs.org/:owner/:repo/:platform-:arch/:version
+# -- :owner - GitHub repository owner (organization or user)
+# -- :repo - GitHub repository name
+# -- :platform - Platform type
+# --- Windows: win32 
+# --- macOS: darwin
+# -- :arch - Architecture type
+# --- Windows: x64, ia32, arm64
+# --- macOS: x64, arm64, universal
+# -- :version - Semantic Versioning (SemVer) compatible application version number
+# - 我们的文件格式：VChat-darwin-arm64-1.0.1.zip
+# 所以对应的 feedURL 是: https://update.electronjs.org/Great-Qin-Dynasty/vchart/darwin-arm64/1.0.1
+# 33-3. 使用云对象存储（Serverless）
+# https://www.electronforge.io/config/publishers/s3#auto-updating-from-s3
+# - 最简单的无服务器更新方式
+# - 通过静态存储 URL 检查更新
+# - 需要为不同平台（macOS/Windows）发布不同格式的元数据文件
+# const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
+# updateElectronApp ({
+#   updateSource: {
+#     type: UpdateSourceType.StaticStorage,
+#     baseUrl: 'https://my-bucket.s3.amazonaws.com/my-app-updates/${process.platform}/${process.arch}' 
+#   }
+# })
 ```
