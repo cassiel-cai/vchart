@@ -1,12 +1,12 @@
-import type { ForgeConfig } from '@electron-forge/shared-types' // 导入 ForgeConfig
-import { MakerSquirrel } from '@electron-forge/maker-squirrel' // 导入 MakerSquirrel
-import { MakerZIP } from '@electron-forge/maker-zip' // 导入 MakerZIP
-import { MakerDeb } from '@electron-forge/maker-deb' // 导入 MakerDeb
-import { MakerRpm } from '@electron-forge/maker-rpm' // 导入 MakerRpm
-import { MakerDMG } from '@electron-forge/maker-dmg' // 导入 MakerDMG
-import { VitePlugin } from '@electron-forge/plugin-vite' // 导入 VitePlugin
-import { FusesPlugin } from '@electron-forge/plugin-fuses' // 导入 FusesPlugin
-import { FuseV1Options, FuseVersion } from '@electron/fuses' // 导入 FuseV1Options 和 FuseVersion
+import type { ForgeConfig } from '@electron-forge/shared-types'
+import { MakerZIP } from '@electron-forge/maker-zip'
+import { MakerDMG } from '@electron-forge/maker-dmg'
+import { VitePlugin } from '@electron-forge/plugin-vite'
+import { FusesPlugin } from '@electron-forge/plugin-fuses'
+import { FuseV1Options, FuseVersion } from '@electron/fuses'
+import dotenv from 'dotenv'
+
+dotenv.config() // 加载 .env 文件
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -16,22 +16,35 @@ const config: ForgeConfig = {
   }, // 打包配置
   rebuildConfig: {}, // 重新构建配置
   makers: [
-    // new MakerSquirrel({}),
-    // new MakerRpm({}),
-    // new MakerDeb({}),
     new MakerDMG({
       icon: './src/asstes/icon.icns', // 应用图标
       format: 'ULFO', // 格式
     }),
     new MakerZIP({}, ['darwin']),
   ], // 制造商配置
+
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'Great-Qin-Dynasty',
+          name: 'vchart',
+        },
+        prerelease: false,
+        draft: true,
+        authToken: process.env.GITHUB_TOKEN, // 设置 GitHub 认证令牌
+      },
+    },
+  ],
+
   plugins: [
     new VitePlugin({
-      // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
-      // If you are familiar with Vite configuration, it will look really familiar.
+      // `build` 可以指定多个入口构建，可以是主进程、预加载脚本、工作进程等。
+      // 如果你熟悉Vite的配置，它看起来会非常熟悉。
       build: [
         {
-          // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
+          // `entry` 只是 `config` 中相应文件的 `build.lib.entry` 的别名。
           entry: 'src/main.ts',
           config: 'vite.main.config.ts',
           target: 'main',
@@ -49,8 +62,8 @@ const config: ForgeConfig = {
         },
       ],
     }),
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
+    // Fuses 用于在打包时启用/禁用各种 Electron 功能
+    // 在打包时，在代码签名之前
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,

@@ -461,9 +461,37 @@ npm install --save-dev @electron-forge/maker-dmg
 # - Electron Release Server
 # - Snap Store
 # - 自定义发布目标
-# 31-5. GitHub Publisher (@electron-forge/publisher-github) 
+# 31-5. GitHub Publisher (@electron-forge/publisher-github)
 # https://www.electronforge.io/config/publishers/github
-# 自动创建 GitHub Release 
+# 自动创建 GitHub Release
 # 上传构建文件
 # 支持草稿和预发布选项
+
+# 32. 创建 Github Release
+npm install --save-dev @electron-forge/publisher-github
+# 32-1. 在 forge.config.ts 文件中添加
+# publishers: [
+#   {
+#     name: '@electron-forge/publisher-github',
+#     config: {
+#       repository: {
+#         owner: 'Github 用户名',
+#         name: '项目名',
+#       },
+#       prerelease: false, // 设置为正式发布, 如果想发布测试版本可以改为 true
+#       draft: true, // 创建草稿发布，可以在正式发布前检查
+# authToken: process.env.GITHUB_TOKEN, // 设置 GitHub 认证令牌
+#     },
+#   },
+# ],
+# 32-2. 创建一个 GitHub Personal Access Token （PAT）:
+# （1）访问 GitHub Settings -> Developer settings -> Personal access tokens
+# （2）创建一个新的 token, 需要有 repo 权限
+# （3）将 token 设置为环境变量: GITHUB_TOKEN
+# 在 .env 中添加GITHUB_TOKEN=****************************************
+# 使用命令来发布：
+npm run publish
+# 注意事项：
+# - 确保你的Github Token 有足够的权限（至少需要 repo 权限）
+# - 发布会创建一个草稿版本（draft: true）, 你可以在 Github 上检查后再正式发布
 ```
