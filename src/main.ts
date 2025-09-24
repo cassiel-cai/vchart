@@ -1,14 +1,12 @@
 /*主进程文件*/
-import { app, BrowserWindow, protocol, net } from 'electron' // 导入app和BrowserWindow
-import started from 'electron-squirrel-startup' // 导入electron-squirrel-startup
-import path from 'node:path' // 导入path
-// import fs from 'fs/promises' // 导入fs
-import url from 'url' // 导入url
-// import util from 'util' // 导入util
-import { configManager } from './config' // 导入 configManager
+import { app, BrowserWindow, protocol, net } from 'electron'
+import started from 'electron-squirrel-startup'
+import path from 'node:path'
+import url from 'url'
+import 'dotenv/config'
+import { configManager } from './config'
 import { setupMenu } from './menu'
 import { registerIpcHandlers } from './ipc'
-// import { lookup } from 'mime-types' // 导入 lookup
 
 // 设置应用名称
 app.setName('VChat')
